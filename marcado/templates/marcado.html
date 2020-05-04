@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title>MARCADO DE DATOS</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  {% extends "librerias.html" %}
+</head>
+
+<body>
+
+  {% block content %}
+  <!-- .......-CABECERA-....... -->
+  <ul style="padding: 17px;filter:alpha(opacity=50); opacity:0.9;">
+    <form action="/logout" method="POST">
+      <button style="float:right" type="submit" class="btn btn-danger btn-lg">Salir</button>
+      <a style="float:right" class="navbar-brand">{{usuario}}</a>
+      <i class="far fa-user-circle" style="font-size:30px;float:right;padding: 5px;color:#e65d3f"></i>
+      <a style="float:right" class="navbar-brand">{{compania}}</a>
+      <i class="fas fa-university" style="font-size:30px;float:right;padding: 5px;color:#e65d3f"></i>
+    </form><br>
+  </ul>
+  <!-- .......-CABECERA-....... -->
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+  {% for category, message in messages %}
+  <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+    <span>{{ message }}</span>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  {% endfor %}
+  {% endif %}
+  {% endwith %}
+
+  <div class="container">
+
+    <div class="jumbotron" >
+      <div id="menu" style="height: 100px;">
+        <!-- Nav pills -->
+        <ul class="nav nav-pills" role="tablist" style="background-color: #ffc107;line-height: 43px;font-size: 19px;">
+          <li class="nav-item">
+            <a class="activo" data-toggle="pill" onclick="ocultar()" href="#menu1" style="color: #060606;">Validar IPS</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="pill" href="#"></a>
+          </li>
+          <li class="nav-item">
+            <a class="activo" data-toggle="pill" onclick="ocultar()" href="#menu2" style="color: #060606;">Insert Bitacora</a>
+          </li>
+        </ul><br>
+
+        <script type="text/javascript">
+          function ocultar() {
+            document.getElementById('contenido').style.display = 'none';
+            document.getElementById('marcado').style.display = 'none';
+            // document.getElement("japaneseCalendar").disabled = true; // deshabilitar
+          }
+        </script>
+        <script type="text/javascript">
+          function mostar() {
+            document.getElementById('dos').style.display = 'show';
+
+          }
+        </script>
+        <script type="text/javascript">
+          $('#menu li a').on('click', function() {
+            $('li a.activo').removeClass('activo');
+            $(this).addClass('activo');
+          });
+        </script>
+
+      </div>
+
+      <div id="contenido" class="container tab-pane" style="background-color: #ececec;"><br>
+        <form action="/consultar" method="POST">
+          <div class="form-row">
+            <div class="form-group col-md-3"></div>
+            <div class="form-group col-md-3">
+              <label for="inputnombre">N° Objetivo: </label>
+              <input type="text" class="form-control" name="id_objetivo" required
+              oninvalid="setCustomValidity('El campo Objetivo es obligatorio')" oninput="setCustomValidity('')">
+            </div>
+            <div class="form-group col-md-1"></div>
+            <div class="form-group col-md-3">
+              <br>
+              <button style="background-color:#e65d3f" type="submit" class="btn btn-warning">Consultar</button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- Tab panes -->
+      <div class="tab-content">
+
+        <div id="menu1" class="container tab-pane" style="background-color: #ececec;"><br>
+          <form action="/consultar" method="POST">
+            <div class="form-row">
+              <div class="form-group col-md-3"></div>
+              <div class="form-group col-md-3">
+                <label for="inputnombre">N° Objetivo: </label>
+                <input type="text" class="form-control" name="id_objetivo"required
+                oninvalid="setCustomValidity('El campo Objetivo es obligatorio')" oninput="setCustomValidity('')">
+              </div>
+              <div class="form-group col-md-1"></div>
+              <div class="form-group col-md-3">
+                <br>
+                <button style="background-color:#e65d3f" type="submit" class="btn btn-warning">Consultar</button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div id="menu2" class="container tab-pane fade" style="background-color: #ececec;"><br>
+
+          <form action="/insertar_bitacora" method="POST">
+            <hr width=50% align="center" size=10 noshade="noshade">
+
+            <div class="form-group row">
+              <div class="col-sm-3"></div>
+              <label for="inputpaso3" class="col-sm-2 col-form-label">Fecha de Entrega</label>
+              <div class="col-sm-4">
+                <input type="text" class="form-control" id="japaneseCalendar" name="fecha_entrega"
+                required oninvalid="setCustomValidity('El campo Fecha de Entrega es obligatorio')" oninput="setCustomValidity('')" />
+              </div>
+            </div>
+
+            <script type="text/javascript">
+            $(document).ready(function() {
+              var userLang = navigator.language || navigator.userLanguage;
+
+              var options = $.extend({},
+                $.datepicker.regional["es"], {
+                  dateFormat: "yy/mm/dd",
+                  dayNamesMin: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sá'],
+                  monthNamesShort: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                  changeMonth: true,
+                  changeYear: true,
+                  highlightWeek: true
+                }
+              );
+              $("#japaneseCalendar").datepicker(options);
+            });
+            </script>
+
+            <div class="form-group row">
+              <div class="col-sm-3"></div>
+              <label for="inputpaso3" class="col-sm-2 col-form-label">Desarrollador</label>
+              <div class="col-sm-4">
+                <input type="text" class="form-control" name="desarrollador" required oninvalid="setCustomValidity('El campo Desarrollador es obligatorio')" oninput="setCustomValidity('')" />
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-sm-3"></div>
+              <label for="inputpaso3" class="col-sm-2 col-form-label">Nombre Proyecto</label>
+              <div class="col-sm-4">
+                <input type="text" class="form-control" name="nombre_proyecto" required
+                oninvalid="setCustomValidity('El campo Nombre Proyecto es obligatorio')" oninput="setCustomValidity('')" />
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-sm-3"></div>
+              <label for="inputpaso3" class="col-sm-2 col-form-label">Documentos Referencia</label>
+              <div class="col-sm-4">
+                <input type="text" class="form-control" name="documentos_referencia" required oninvalid="setCustomValidity('El campo Documentos Referencia es obligatorio')" oninput="setCustomValidity('')" />
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <div class="col-sm-3"></div>
+              <label for="inputpaso3" class="col-sm-2 col-form-label">Tipo</label>
+              <div class="col-sm-4">
+                <input type="text" class="form-control" name="tipo" required oninvalid="setCustomValidity('El campo Tipo es obligatorio')" oninput="setCustomValidity('')" />
+              </div>
+            </div><br>
+
+            <div class="form-group row">
+              <div class="col-sm-6"></div>
+              <div class="col-sm-4">
+                <button style="background-color:#e65d3f" type="submit" class="btn btn-warning">Guardar</button>
+              </div>
+            </div>
+          </form>
+
+        </div>
+      </div>
+
+    </div>
+
+    {% if cantidad is undefined %}
+
+    {%else%}
+    {% if cantidad > 0 %}
+    <div id="marcado" class="jumbotron ">
+      <form action="/insertar_marcado" method="POST">
+        <p align="center">
+        <h2> Marcado de datos </h2>
+        <p>
+          <hr width=50% align="center" size=10 noshade="noshade">
+
+            <input type="hidden" class="form-control" name="objetivo" value="{{obj}}" />
+
+        <div class="form-group row">
+          <div class="col-sm-3"></div>
+          <label for="inputpaso3" class="col-sm-2 col-form-label">Seleccione Nodo</label>
+          <div class="col-sm-4">
+            <select class="selectpicker form-control" data-live-search="true" name="origen" id="origen" style="background-color: #fff5eb;width: 481px;">
+              {% for nodo in isp %}
+              <option data-tokens="{{nodo.0}}">{{nodo.0}}</option>
+              {%endfor%}
+            </select>
+          </div>
+        </div>
+
+
+        <div class="form-group row" style="width:110%;">
+          <div class="col-sm-3"></div>
+          <label for="inputpaso3" class="col-sm-2 col-form-label"></label>
+          <div class="col-sm-3">
+            <input type="button" class="pasar izq form-control btn btn-warning" value="Pasar »"><br><br>
+            <input type="button" class="pasar_dere der form-control btn btn-warning" value="« Quitar">
+          </div>
+        </div>
+
+
+        <div class="form-group row">
+          <div class="col-sm-3"></div>
+          <label for="inputpaso3" class="col-sm-2 col-form-label">&nbsp;</label>
+          <div class="col-sm-4">
+            <select name="nodo" id="nodo" multiple="multiple" size="3" class="form-control" style="background-color: #fff5eb;">
+
+            </select>
+          </div>
+        </div>
+
+        <script type="text/javascript">
+          $().ready(function() {
+            $('.pasar').click(function() {
+              return !$('#origen option:selected').remove().appendTo('#nodo');
+            });
+            $('.pasar_dere').click(function() {
+              return !$('#nodo option:selected').remove().appendTo('#origen');
+            });
+          });
+        </script>
+
+
+
+
+
+        <div class="form-group row">
+          <div class="col-sm-3"></div>
+          <label for="inputfecha_inicio3" class="col-sm-2 col-form-label">Fecha Inicio</label>
+          <div class="col-sm-4">
+            <div class="input-group date" id="datetimepicker7" data-target-input="nearest">
+              <input type='text' class="form-control" name="fecha_inicio" required data-date-format="YYYY-MM-DD HH:mm:ss" oninvalid="setCustomValidity('El campo Fecha de Inicio es obligatorio')" oninput="setCustomValidity('')" />
+              <div class="input-group-append" data-target="#datetimepicker7" data-toggle="datetimepicker">
+                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <div class="col-sm-3"></div>
+          <label for="inputfecha_inicio3" class="col-sm-2 col-form-label">Fecha Termino</label>
+          <div class="col-sm-4">
+            <div class="input-group date" id="datetimepicker8" data-target-input="nearest">
+              <input type='text' class="form-control" name="fecha_termino" required data-date-format="YYYY-MM-DD HH:mm:ss" oninvalid="setCustomValidity('El campo Fecha de Termino es obligatorio')" oninput="setCustomValidity('')" />
+              <div class="input-group-append" data-target="#datetimepicker8" data-toggle="datetimepicker">
+                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <script type="text/javascript">
+          $(function() {
+            $('#datetimepicker7').datetimepicker({
+              locale: 'es',
+              // format: 'DD-MM-YYYY HH:mm:ss'
+              format: 'YYYY-MM-DD HH:mm:ss'
+            });
+            $('#datetimepicker8').datetimepicker({
+              locale: 'es',
+              // format: 'DD-MM-YYYY HH:mm:ss'
+              format: 'YYYY-MM-DD HH:mm:ss'
+
+            });
+            $("#datetimepicker7").on("change.datetimepicker", function(e) {
+              $('#datetimepicker8').datetimepicker('minDate', e.date);
+            });
+            $("#datetimepicker8").on("change.datetimepicker", function(e) {
+              $('#datetimepicker7').datetimepicker('maxDate', e.date);
+            });
+          });
+        </script>
+
+        <div class="form-group row">
+          <div class="col-sm-3"></div>
+          <label for="inputpaso3" class="col-sm-2 col-form-label">Motivo</label>
+          <div class="col-sm-4">
+            <input type="text" class="form-control" name="motivo" required oninvalid="setCustomValidity('El campo Motivo es obligatorio')" oninput="setCustomValidity('')" />
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <div class="col-sm-3"></div>
+          <label for="inputpaso3" class="col-sm-2 col-form-label">Autorizaci&oacute;n</label>
+          <div class="col-sm-4">
+            <input type="text" class="form-control" name="autorizacion" required oninvalid="setCustomValidity('El campo Autorizaci&oacute;n es obligatorio')" oninput="setCustomValidity('')" />
+          </div>
+        </div><br>
+
+        <div class="form-group row">
+          <div class="col-sm-6"></div>
+          <div class="col-sm-4">
+            <button style="background-color:#e65d3f" type="submit" onclick="mostar()" class="btn btn-warning">Guardar</button>
+          </div>
+        </div>
+
+      </form>
+    </div>
+
+    {% endif %}
+
+    {% endif %}
+
+  </div>
+
+
+
+  {% endblock %}
+</body>

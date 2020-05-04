@@ -1,0 +1,35 @@
+/home/murzua/.local/lib/python2.7/site-packages/requests/__init__.py:83: RequestsDependencyWarning: Old version of cryptography ([1, 2, 3]) may cause slowdown.
+  warnings.warn(warning, RequestsDependencyWarning)
+ * Serving Flask app "index" (lazy loading)
+ * Environment: production
+   WARNING: This is a development server. Do not use it in a production deployment.
+   Use a production WSGI server instead.
+ * Debug mode: off
+ * Running on http://0.0.0.0:5000/ (Press CTRL+C to quit)
+ * Serving Flask app "index" (lazy loading)
+ * Environment: production
+   WARNING: This is a development server. Do not use it in a production deployment.
+   Use a production WSGI server instead.
+ * Debug mode: off
+Traceback (most recent call last):
+  File "index.py", line 203, in <module>
+    app.run("0.0.0.0",5000)
+  File "/home/murzua/Desktop/git_aplicaciones/Administrador_SBIF/venv/local/lib/python2.7/site-packages/flask/app.py", line 990, in run
+    run_simple(host, port, self, **options)
+  File "/home/murzua/Desktop/git_aplicaciones/Administrador_SBIF/venv/local/lib/python2.7/site-packages/werkzeug/serving.py", line 1010, in run_simple
+    inner()
+  File "/home/murzua/Desktop/git_aplicaciones/Administrador_SBIF/venv/local/lib/python2.7/site-packages/werkzeug/serving.py", line 963, in inner
+    fd=fd,
+  File "/home/murzua/Desktop/git_aplicaciones/Administrador_SBIF/venv/local/lib/python2.7/site-packages/werkzeug/serving.py", line 806, in make_server
+    host, port, app, request_handler, passthrough_errors, ssl_context, fd=fd
+  File "/home/murzua/Desktop/git_aplicaciones/Administrador_SBIF/venv/local/lib/python2.7/site-packages/werkzeug/serving.py", line 699, in __init__
+    HTTPServer.__init__(self, server_address, handler)
+  File "/usr/lib/python2.7/SocketServer.py", line 417, in __init__
+    self.server_bind()
+  File "/usr/lib/python2.7/BaseHTTPServer.py", line 108, in server_bind
+    SocketServer.TCPServer.server_bind(self)
+  File "/usr/lib/python2.7/SocketServer.py", line 431, in server_bind
+    self.socket.bind(self.server_address)
+  File "/usr/lib/python2.7/socket.py", line 228, in meth
+    return getattr(self._sock,name)(*args)
+socket.error: [Errno 98] Address already in use

@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title>MARCADO DE DATOS</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  {% extends "librerias.html" %}
+</head>
+
+<body>
+
+  {% block content %}
+  <!-- .......-CABECERA-....... -->
+  <ul style="padding: 17px;filter:alpha(opacity=50); opacity:0.9;">
+
+    <form action="/logout" method="POST">
+      <button style="float:right" type="submit" class="btn btn-danger btn-lg">Salir</button>
+      <a style="float:right" class="navbar-brand">{{usuario}}</a>
+      <i class="far fa-user-circle" style="font-size:30px;float:right;padding: 5px;color:rgb(236, 101, 14)"></i>
+      <a style="float:right" class="navbar-brand">{{compania}}</a>
+      <i class="fas fa-university" style="font-size:30px;float:right;padding: 5px;color:rgb(236, 101, 14)"></i>
+    </form><br>
+  </ul>
+
+  <!-- .......-CABECERA-....... -->
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+  {% for category, message in messages %}
+  <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+    <span>{{ message }}</span>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  {% endfor %}
+  {% endif %}
+  {% endwith %}
+
+
+
+  <div class="container">
+    <div class="jumbotron">
+      <div id="menu">
+        <!-- Nav pills -->
+        <ul class="nav nav-pills" role="tablist" style="background-color: #ffc107;line-height: 43px;font-size: 19px;">
+          <li class="nav-item">
+            <a class="activo" data-toggle="pill" onclick="ocultar()" href="#menu1" style="color: #060606;">Agregar Usuarios</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="pill" href="#"></a>
+          </li>
+          <li class="nav-item">
+            <a class="activo" data-toggle="pill" onclick="ocultar()" href="#menu2" style="color: #060606;">Administrar Usuarios</a>
+          </li>
+
+        </ul><br>
+
+        <script type="text/javascript">
+          function ocultar() {
+            document.getElementById('contenido').style.display = 'none';
+          }
+        </script>
+        <script type="text/javascript">
+          $('#menu li a').on('click', function() {
+            $('li a.activo').removeClass('activo');
+            $(this).addClass('activo');
+          });
+        </script>
+      </div>
+
+      <div id="contenido" style="background-color: #ececec;"><br>
+
+      <table id="primera_vista" class="display" style="width:100%">
+
+        <thead style="background-color: rgb(236, 101, 14)">
+          <tr>
+            <th scope="col">
+              <p style="color:#f0f0f0;">Accion</p>
+            </th>
+            <th scope="col">
+              <p style="color:#f0f0f0;">Perfil</p>
+            </th>
+            <th scope="col">
+              <p style="color:#f0f0f0;">Activo</p>
+            </th>
+            <th scope="col">
+              <p style="color:#f0f0f0;">Nombre Usuario</p>
+            </th>
+          </tr>
+        </thead>
+        {% for show_usr in mostrar_user%}
+        <tbody>
+          <tr style="width:100%">
+            <td>
+              <a href="/actualizar_perfil/{{show_usr.2}}" class="btn btn-warning" data-toggle="modal" data-target="#myModal{{show_usr.2}}">
+                <span class="far fa-edit x" data-toggle="tooltip" title="Modificar"></span>
+              </a>
+
+              <!-- Modal -->
+              <div class="modal fade" id="myModal{{show_usr.2}}" role="dialog">
+                <div class="modal-dialog">
+
+                  <!-- Modal content-->
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+
+                    </div>
+                    <div class="modal-body">
+
+                      <!-- INICIO FORMULARIO ACTUALIZA -->
+                      <form action="{{ url_for('actualizar_perfil') }}" method="POST">
+
+                        <!-- ID REGISTRO -->
+
+                        <div class="form-group row">
+                          <label for="inputsolucion3" class="col-sm-3 col-form-label">Perfil</label>
+                          <div class="col-sm-9">
+                            <select class="form-control" name="nombre_perfil">
+                              {% if show_usr.0  == 'administrador'%}
+                              <option value="1">Administrador</option>
+                              <option value="2">Lectura</option>
+                              {%elif show_usr.0  == 'lectura'%}
+                              <option value="2">Lectura</option>
+                              <option value="1">Administrador</option>
+                              {%endif%}
+                            </select>
+                          </div>
+                        </div>
+
+                        <div class="form-group row">
+                          <label for="input3" class="col-sm-3 col-form-label">Activo</label>
+                          <div class="col-sm-9">
+                            <select class="form-control" name="activo">
+                              {% if show_usr.1  == 'si' %}
+                              <option value="si">Habilitado</option>
+                              <option value="no">Deshabilitado</option>
+                              {%else%}
+                              <option value="no">Deshabilitado</option>
+                              <option value="si">Habilitado</option>
+                              {%endif%}
+                            </select>
+                          </div>
+                        </div>
+
+                        <div class="form-group row">
+                          <label for="inputfecha_termino3" class="col-sm-3 col-form-label">Nombre Usuario</label>
+                          <div class="col-sm-9">
+                            <input type="text" class="form-control" name="nombre_usuario" disabled value="{{show_usr.2}}">
+                          </div>
+                        </div>
+
+
+                        <br><br>
+
+                        <input type="hidden" class="form-control" name="id_perfil_usuario" value="{{show_usr.3}}">
+
+                        <div class="form-group row">
+                          <div class="col-sm-5"></div>
+                          <div class="col-sm-2">
+                            <button type="submit" class="btn btn-success">Guardar</button>
+                          </div>
+                          <div class="col-sm-5"></div>
+                        </div>
+                      </form>
+                      <!-- TERMINO FORMULARIO ACTUALIZA -->
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- ENDModal -->
+
+
+            </td>
+            <td>{{show_usr.0}}</td>
+            {% if show_usr.1== 'si' %}
+            <th><span class="far fa-check-circle text-success fa-2x"></span></th>
+            {%else%}
+            <th><span class="far fa-times-circle  text-danger fa-2x"></span></th>
+            {%endif%}
+            <td>{{show_usr.2}}</td>
+          </tr>
+        </tbody>
+        {% endfor %}
+      </table>
+
+
+      <script type="text/javascript">
+        $(document).ready(function() {
+          $('#primera_vista').DataTable({
+            "info": false,
+            "searching": false,
+            "paging": false,
+            "ordering": false,
+            "language": {
+              "url": "//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json"
+            }
+          });
+
+        });
+      </script>
+
+    </div>
+
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+
+      <div id="menu1" class="container tab-pane" style="background-color: #ececec;"><br>
+
+        <form action="/insertar_perfil" method="POST">
+          <div class="form-group row">
+            <label for="inputpaso3" class="col-sm-3 col-form-label">Seleccione Usuario</label>
+            <div class="col-sm-6">
+              <select class="selectpicker form-control" data-live-search="true" name="origen" id="origen" style="background-color: #fff5eb;width: 481px;">
+                {% for user_perfil in usuario_add %}
+                <option data-tokens="{{user_perfil.0}}">{{user_perfil.0}}</option>
+                {%endfor%}
+              </select>
+            </div>
+          </div>
+
+
+          <div class="form-group row" style="width:135%;">
+            <label for="inputpaso3" class="col-sm-3 col-form-label"></label>
+            <div class="col-sm-3">
+              <input type="button" class="pasar izq form-control btn btn-warning" value="Pasar »"><br><br>
+              <input type="button" class="pasar_dere der form-control btn btn-warning" value="« Quitar">
+            </div>
+          </div>
+
+
+          <div class="form-group row">
+            <label for="inputpaso3" class="col-sm-3 col-form-label"></label>
+            <div class="col-sm-6">
+              <select name="usr_perfil" id="usr_perfil" multiple="multiple" size="8" class="form-control" style="background-color: #fff5eb;">
+
+              </select>
+            </div>
+          </div>
+
+          <script type="text/javascript">
+            $().ready(function() {
+              $('.pasar').click(function() {
+                return !$('#origen option:selected').remove().appendTo('#usr_perfil');
+              });
+              $('.pasar_dere').click(function() {
+                return !$('#usr_perfil option:selected').remove().appendTo('#origen');
+              });
+            });
+          </script>
+
+
+          <div class="form-group row">
+            <label for="inputpaso3" class="col-sm-3 col-form-label">Seleccione Perfil</label>
+            <div class="col-sm-6">
+              <select class="form-control" data-live-search="true" name="perfil_usr_add" style="background-color: #fff5eb;">
+                <option value="1">Administrador</option>
+                <option value="2">Lectura</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="inputpaso3" class="col-sm-3 col-form-label">Activo</label>
+            <div class="col-sm-6">
+              <select class="form-control" data-live-search="true" name="activo_usr_add" style="background-color: #fff5eb;">
+                <option value="si">Si</option>
+                <option value="no">No</option>
+              </select>
+            </div>
+          </div>
+
+
+
+          <div class="form-group row">
+            <div class="col-sm-5"></div>
+            <div class="col-sm-2">
+              <button type="submit" class="btn btn-success">Guardar</button>
+            </div>
+            <div class="col-sm-5"></div>
+          </div>
+        </form>
+      </div>
+
+
+      <div id="menu2" class="container tab-pane fade" style="background-color: #ececec;"><br>
+
+        <table id="examplq" class="display" style="width:100%">
+
+          <thead style="background-color: rgb(236, 101, 14)">
+            <tr>
+              <th scope="col">
+                <p style="color:#f0f0f0;">Accion</p>
+              </th>
+              <th scope="col">
+                <p style="color:#f0f0f0;">Perfil</p>
+              </th>
+              <th scope="col">
+                <p style="color:#f0f0f0;">Activo</p>
+              </th>
+              <th scope="col">
+                <p style="color:#f0f0f0;">Nombre Usuario</p>
+              </th>
+            </tr>
+          </thead>
+          {% for show_usr in mostrar_user%}
+          <tbody>
+            <tr style="width:100%">
+              <td>
+                <a href="/actualizar_perfil/{{show_usr.2}}" class="btn btn-warning" data-toggle="modal" data-target="#myModal2{{show_usr.2}}">
+                  <span class="far fa-edit x" data-toggle="tooltip" title="Modificar"></span>
+                </a>
+
+                <!-- Modal -->
+                <div class="modal fade" id="myModal2{{show_usr.2}}" role="dialog">
+                  <div class="modal-dialog">
+
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+
+                      </div>
+                      <div class="modal-body">
+
+                        <!-- INICIO FORMULARIO ACTUALIZA -->
+                        <form action="{{ url_for('actualizar_perfil') }}" method="POST">
+
+                          <!-- ID REGISTRO -->
+
+                          <div class="form-group row">
+                            <label for="inputsolucion3" class="col-sm-3 col-form-label">Perfil</label>
+                            <div class="col-sm-9">
+                              <select class="form-control" name="nombre_perfil">
+                                {% if show_usr.0  == 'administrador'%}
+                                <option value="1">Administrador</option>
+                                <option value="2">Lectura</option>
+                                {%elif show_usr.0  == 'lectura'%}
+                                <option value="2">Lectura</option>
+                                <option value="1">Administrador</option>
+                                {%endif%}
+                              </select>
+                            </div>
+                          </div>
+
+                          <div class="form-group row">
+                            <label for="input3" class="col-sm-3 col-form-label">Activo</label>
+                            <div class="col-sm-9">
+                              <select class="form-control" name="activo">
+                                {% if show_usr.1  == 'si' %}
+                                <option value="si">Habilitado</option>
+                                <option value="no">Deshabilitado</option>
+                                {%else%}
+                                <option value="no">Deshabilitado</option>
+                                <option value="si">Habilitado</option>
+                                {%endif%}
+                              </select>
+                            </div>
+                          </div>
+
+                          <div class="form-group row">
+                            <label for="inputfecha_termino3" class="col-sm-3 col-form-label">Nombre Usuario</label>
+                            <div class="col-sm-9">
+                              <input type="text" class="form-control" name="nombre_usuario" disabled value="{{show_usr.2}}">
+                            </div>
+                          </div>
+
+
+                          <br><br>
+
+                          <input type="hidden" class="form-control" name="id_perfil_usuario" value="{{show_usr.3}}">
+
+                          <div class="form-group row">
+                            <div class="col-sm-5"></div>
+                            <div class="col-sm-2">
+                              <button type="submit" class="btn btn-success">Guardar</button>
+                            </div>
+                            <div class="col-sm-5"></div>
+                          </div>
+                        </form>
+                        <!-- TERMINO FORMULARIO ACTUALIZA -->
+                      </div>
+                      <div class="modal-footer">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- ENDModal -->
+
+
+              </td>
+              <td>{{show_usr.0}}</td>
+              {% if show_usr.1== 'si' %}
+              <th><span class="far fa-check-circle text-success fa-2x"></span></th>
+              {%else%}
+              <th><span class="far fa-times-circle  text-danger fa-2x"></span></th>
+              {%endif%}
+              <td>{{show_usr.2}}</td>
+            </tr>
+          </tbody>
+          {% endfor %}
+        </table>
+
+
+        <script type="text/javascript">
+          $(document).ready(function() {
+            $('#examplq').DataTable({
+              "info": false,
+              "searching": false,
+              "paging": false,
+              "ordering": false,
+              "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json"
+              }
+            });
+
+          });
+        </script>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}
+</body>
