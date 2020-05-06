@@ -229,6 +229,7 @@ def insertar_perfil():
 def toUTC(tz, datetime):
     return tz.normalize(tz.localize(datetime)).astimezone(pytz.utc)
 
+
 @app.route("/insertar_marcado", methods=['POST'])
 def insertar_marcado():
 
@@ -237,15 +238,14 @@ def insertar_marcado():
         return render_template("login.html")
 
     objetivo = request.form['objetivo']
+
     nodo = request.form.getlist('nodo')
-
-    listUsr = []
+    nodo_final = ""
     for elem in nodo:
-        dictUsr = {}
-        dictUsr["nodo"] ="{"+(str(elem).split("-")[0])+"}"
-        listUsr.append(dictUsr)
+        nodo_final2 =(str(elem).split("-")[0])
+        nodo_final = nodo_final + "," +nodo_final2
+        nodos = "{"+ nodo_final[1:120] + "}"
 
-    print"listUsr",listUsr
 
     fecha_inicio = request.form['fecha_inicio']
     fecha_termino = request.form['fecha_termino']
@@ -270,7 +270,7 @@ def insertar_marcado():
 
     # INSERTAR MARCADO DE DATOS
     cursor2 = inserta_marcadoDatos.insert_marcadoDatos(
-        objetivo,listUsr,hlocal_inicio,hlocal_termino,motivo,autorizacion)
+        objetivo,nodos,hlocal_inicio,hlocal_termino,motivo,autorizacion)
 
     if cursor2 != False:
         # CONSULTAR CACHE
@@ -278,8 +278,7 @@ def insertar_marcado():
         cache = cursor3.fetchall()
         q_cache = len(cache)
 
-        print"q_cacheeeee",q_cache
-        # # # BORRAR cache.cache_nivel1
+        # BORRAR cache.cache_nivel1
         if q_cache > 0:
             cursor3 = borrar_cache.delete_cache(objetivo,fecha_inicial)
             flash("MARCADO DE DATOS REALIZADOS Y SE ELIMINA CACHE ", "success")
@@ -291,6 +290,8 @@ def insertar_marcado():
         flash("NO SE REALIZA MARCADO DE DATOS ", "danger")
 
     return redirect(url_for('inicio'))
+
+
 
 @app.route("/insertar_bitacora", methods=['POST'])
 def insertar_bitacora():

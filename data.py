@@ -238,21 +238,21 @@ class consulta_zona:
 
 class inserta_marcadoDatos:
     @staticmethod
-    def insert_marcadoDatos(objetivo,listUsr,hlocal_inicio,hlocal_termino,motivo,autorizacion):
+    def insert_marcadoDatos(objetivo,nodos,hlocal_inicio,hlocal_termino,motivo,autorizacion):
         try:
             connection = psycopg2.connect(
                 database="central2010", user="postgres", password="atentusdesa", host="172.16.5.117", port="5432")
             cursor = connection.cursor()
-            for data in listUsr:
-                cursor.execute(
-                    "SELECT MAX( periodo_marcado_id ) + 1 FROM public.periodo_marcado")
-                periodo_marcado_id = cursor.fetchone()
 
-                cursor.execute("""INSERT INTO public.periodo_marcado
-                                    (periodo_marcado_id,objetivo_id, nodos_id, fecha_inicio, fecha_termino,motivo, autorizacion)
-                                        VALUES (%s,%s,%s,%s,%s,%s,%s)""",
-                               (periodo_marcado_id,objetivo,data["nodo"],hlocal_inicio,hlocal_termino,motivo,autorizacion))
-                connection.commit()
+            cursor.execute(
+                "SELECT MAX( periodo_marcado_id ) + 1 FROM public.periodo_marcado")
+            periodo_marcado_id = cursor.fetchone()
+
+            cursor.execute("""INSERT INTO public.periodo_marcado
+                                (periodo_marcado_id,objetivo_id, nodos_id, fecha_inicio, fecha_termino,motivo, autorizacion)
+                                    VALUES (%s,%s,%s,%s,%s,%s,%s)""",
+                           (periodo_marcado_id,objetivo,nodos,hlocal_inicio,hlocal_termino,motivo,autorizacion))
+            connection.commit()
             # flash("DATOS INGRESADOS CON EXITO", "success")
             return cursor
         except:
