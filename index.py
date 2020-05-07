@@ -6,7 +6,7 @@ from pytz import timezone as pytztimezone
 import pytz
 import requests
 from data import   consulta_user_compania, consulta_user, consulta_user_perfiles, consulta_perfil, insertar_registro_perfil, \
-    actualizar_public_cliente, actualizar_rtrim, actualiza_perfil,consulta_objetivo,consulta_cache,borrar_cache,\
+     actualizar_rtrim, actualiza_perfil,consulta_objetivo,consulta_cache,borrar_cache,\
     consulta_cliente,consulta_zona,inserta_marcadoDatos,inserta_bitacora
 
 from utils.get_token import get
@@ -147,7 +147,7 @@ def consultar_bco_chile():
     if q_obejtivo > 0:
         return render_template("marcado.html", usuario=nombre,compania=cliente,cantidad = q_obejtivo, obj = id_objetivo, isp = objetivo )
     else:
-        flash("ISP SIN RESPUESTA", "danger")
+        flash("OBJETIVO SIN RESPUESTA", "danger")
         return render_template("marcado.html", usuario=nombre,compania=cliente,cantidad = q_obejtivo)
 
 @app.route("/mantenedor", methods=["GET", "POST"])
@@ -220,7 +220,7 @@ def insertar_perfil():
     cursor = insertar_registro_perfil.insert_perfil(
         listUsr, perfil_usr_add, activo_usr_add)
     if cursor != False:
-        cursor2 = actualizar_public_cliente.update_public_cliente(listUsr)
+        # cursor2 = actualizar_public_cliente.update_public_cliente(listUsr)
         cursor3 = actualizar_rtrim.update_rtrim()
 
     return redirect(url_for('mantenedor'))
@@ -301,13 +301,9 @@ def insertar_bitacora():
         return render_template("login.html")
 
     fecha_entrega = request.form['fecha_entrega']
-    desarrollador = request.form['desarrollador']
     nombre_proyecto = request.form['nombre_proyecto']
-    documentos_referencia = request.form['documentos_referencia']
-    tipo = request.form['tipo']
 
-    cursor = inserta_bitacora.insert_bitacora(fecha_entrega,desarrollador,
-      nombre_proyecto, documentos_referencia,  tipo)
+    cursor = inserta_bitacora.insert_bitacora(fecha_entrega,nombre_proyecto)
 
     return redirect(url_for('inicio'))
 

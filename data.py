@@ -55,10 +55,22 @@ class consulta_user:
     def select_user():
         try:
             cursor = conexion.conect_post()
-            cursor.execute("""SELECT distinct concat(cu.cliente_usuario_id,' - ',cu.nombre) ,cu.activo_perfil_marcado ,c.nombre
-                                FROM public.cliente_usuario cu inner join public.cliente c
-                                ON cu.cliente_id = c.cliente_id
-                                where cu.nombre is not null and cu.activo_perfil_marcado  = 'si' and c.nombre = 'Atentus'  """)
+            cursor.execute("""SELECT
+                                	CONCAT (
+                                		cliente_usuario_id,
+                                		' - ',
+                                		nombre
+                                	)
+                                FROM
+                                	PUBLIC .cliente_usuario
+                                WHERE
+                                	cliente_id = 1
+                                AND cliente_usuario_id NOT IN (
+                                	SELECT
+                                		cliente_usuario_id :: INTEGER
+                                	FROM
+                                		marcado.perfil_usuario
+                                );  """)
             return cursor
         except:
             return False
@@ -70,7 +82,7 @@ class consulta_user_perfiles:
         try:
             cursor = conexion.conect_post()
             cursor.execute("""SELECT a2.nombre_perfil, a1.activo, a1.nombre_usuario,a1.id_perfil_usuario
-                              FROM sbif.perfil_usuario  a1 inner join sbif.perfil a2
+                              FROM marcado.perfil_usuario  a1 inner join marcado.perfil a2
                               ON a1.perfil_id = a2.perfil_id""")
             return cursor
         except:
@@ -83,7 +95,7 @@ class actualiza_perfil:
             connection = psycopg2.connect(
                 database="central2010", user="postgres", password="atentusdesa", host="172.16.5.117", port="5432")
             cursor = connection.cursor()
-            cursor.execute(""" UPDATE sbif.perfil_usuario SET  perfil_id=%s, activo=%s WHERE id_perfil_usuario =%s """,
+            cursor.execute(""" UPDATE marcado.perfil_usuario SET  perfil_id=%s, activo=%s WHERE id_perfil_usuario =%s """,
                            (nombre_perfil, activo, id_perfil_usuario))
 
             connection.commit()
@@ -98,9 +110,10 @@ class consulta_perfil:
     def select_perfil():
         try:
             usuario = session['cliente_usuario_id']
+            print"usuario",usuario
             cursor = conexion.conect_post()
             cursor.execute("""SELECT a1.nombre_perfil, b2.activo
-                                  FROM sbif.perfil a1 inner join sbif.perfil_usuario b2
+                                  FROM marcado.perfil a1 inner join marcado.perfil_usuario b2
                                   ON a1.perfil_id = b2.perfil_id
                                   where b2.cliente_usuario_id = '%s'""", (usuario,))
             return cursor
@@ -117,9 +130,9 @@ class insertar_registro_perfil:
         cursor = connection.cursor()
         for data in list:
             cursor.execute(
-                "SELECT MAX( id_perfil_usuario ) + 1 FROM sbif.perfil_usuario")
+                "SELECT MAX( id_perfil_usuario ) + 1 FROM marcado.perfil_usuario")
             id_datos = cursor.fetchone()
-            cursor.execute("""INSERT INTO sbif.perfil_usuario(id_perfil_usuario, cliente_usuario_id, perfil_id, activo, nombre_usuario)
+            cursor.execute("""INSERT INTO marcado.perfil_usuario(id_perfil_usuario, cliente_usuario_id, perfil_id, activo, nombre_usuario)
                                     VALUES (%s,%s,%s,%s,%s)""",
                            (id_datos, data["id_usuario_perfil"], perfil_usr_add, activo_usr_add, data["nombre_usuario_perfil"]))
             connection.commit()
@@ -127,23 +140,23 @@ class insertar_registro_perfil:
         return cursor
 
 
-class actualizar_public_cliente:
-    @staticmethod
-    def update_public_cliente(list):
-        try:
-
-            connection = psycopg2.connect(
-                database="central2010", user="postgres", password="atentusdesa", host="172.16.5.117", port="5432")
-            cursor = connection.cursor()
-            for data in list:
-
-                cursor.execute(""" UPDATE public.cliente_usuario SET  activo_perfil_marcado  = 'no' WHERE cliente_usuario_id = %s """,
-                               (data["id_usuario_perfil"],))
-                connection.commit()
-
-        except:
-            flash("NO ES POSIBLE ACTUALIZAR !!", "danger")
-            return cursor
+# class actualizar_public_cliente:
+#     @staticmethod
+#     def update_public_cliente(list):
+#         try:
+#
+#             connection = psycopg2.connect(
+#                 database="central2010", user="postgres", password="atentusdesa", host="172.16.5.117", port="5432")
+#             cursor = connection.cursor()
+#             for data in list:
+#
+#                 cursor.execute(""" UPDATE public.cliente_usuario SET  activo_perfil_marcado  = 'no' WHERE cliente_usuario_id = %s """,
+#                                (data["id_usuario_perfil"],))
+#                 connection.commit()
+#
+#         except:
+#             flash("NO ES POSIBLE ACTUALIZAR !!", "danger")
+#             return cursor
 
 
 class actualizar_rtrim:  # ELIMINA ESPACIOS EN BLANCO AL INSERTAR
@@ -155,7 +168,7 @@ class actualizar_rtrim:  # ELIMINA ESPACIOS EN BLANCO AL INSERTAR
                 database="central2010", user="postgres", password="atentusdesa", host="172.16.5.117", port="5432")
             cursor = connection.cursor()
             cursor.execute(
-                """ UPDATE sbif.perfil_usuario SET cliente_usuario_id=rtrim(cliente_usuario_id) """)
+                """ UPDATE marcado.perfil_usuario SET cliente_usuario_id=rtrim(cliente_usuario_id) """)
             connection.commit()
         except:
             flash("NO ES POSIBLE ACTUALIZAR  RTRIM!!", "danger")
@@ -261,19 +274,17 @@ class inserta_marcadoDatos:
 
 class inserta_bitacora:
     @staticmethod
-    def insert_bitacora(fecha_entrega,desarrollador,nombre_proyecto, documentos_referencia, tipo):
+    def insert_bitacora(fecha_entrega,nombre_proyecto):
 
         connection = psycopg2.connect(
             database="central2010", user="postgres", password="atentusdesa", host="172.16.5.117", port="5432")
         cursor = connection.cursor()
 
+        desarrollador = session['cliente_usuario'][0][0]
+
         cursor.execute(
             "SELECT MAX( bitacora_id ) + 1 FROM log.bitacora")
         bitacora_id = cursor.fetchone()
-
-        cursor.execute(
-            "SELECT MAX( secuencia ) + 1 FROM log.bitacora")
-        secuencia = cursor.fetchone()
 
         cursor.execute(
             "SELECT version FROM log.bitacora ORDER BY bitacora_id DESC LIMIT 1")
@@ -281,9 +292,9 @@ class inserta_bitacora:
 
         cursor.execute("""INSERT into
                             log.bitacora (bitacora_id,version,fecha_entrega, fecha_instalacion, desarrollador,
-                                        nombre_proyecto, documentos_referencia, secuencia, tipo, instalado)
-                            values( %s,%s,%s,now(),%s,%s,%s,%s,%s,'t');""",
-                                (bitacora_id,version,fecha_entrega, desarrollador,nombre_proyecto, documentos_referencia, secuencia, tipo))
+                                        nombre_proyecto,tipo, instalado)
+                            values( %s,%s,%s,now(),%s,%s,'M','t');""",
+                                (bitacora_id,version,fecha_entrega, desarrollador,nombre_proyecto))
         connection.commit()
         flash("DATOS INGRESADOS CON EXITO", "success")
         return cursor
