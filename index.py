@@ -112,7 +112,7 @@ def inicio():
 
         if session["perfil_nombre"][0][1] == 'si':
 
-            if session["perfil_nombre"][0][0] == 'lectura':
+            if session["perfil_nombre"][0][0] == 'escritura':
 
                 return render_template("marcado.html", usuario=nombre,compania=cliente)
 

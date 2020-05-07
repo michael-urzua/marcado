@@ -55,10 +55,10 @@ class consulta_user:
     def select_user():
         try:
             cursor = conexion.conect_post()
-            cursor.execute("""SELECT distinct concat(cu.cliente_usuario_id,' - ',cu.nombre) ,cu.activo_perfil,c.nombre
+            cursor.execute("""SELECT distinct concat(cu.cliente_usuario_id,' - ',cu.nombre) ,cu.activo_perfil_marcado ,c.nombre
                                 FROM public.cliente_usuario cu inner join public.cliente c
                                 ON cu.cliente_id = c.cliente_id
-                                where cu.nombre is not null and cu.activo_perfil = 'si' and c.nombre = 'Atentus'  """)
+                                where cu.nombre is not null and cu.activo_perfil_marcado  = 'si' and c.nombre = 'Atentus'  """)
             return cursor
         except:
             return False
@@ -137,7 +137,7 @@ class actualizar_public_cliente:
             cursor = connection.cursor()
             for data in list:
 
-                cursor.execute(""" UPDATE public.cliente_usuario SET  activo_perfil = 'no' WHERE cliente_usuario_id = %s """,
+                cursor.execute(""" UPDATE public.cliente_usuario SET  activo_perfil_marcado  = 'no' WHERE cliente_usuario_id = %s """,
                                (data["id_usuario_perfil"],))
                 connection.commit()
 
