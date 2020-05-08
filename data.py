@@ -136,43 +136,10 @@ class insertar_registro_perfil:
                                     VALUES (%s,%s,%s,%s,%s)""",
                            (id_datos, data["id_usuario_perfil"], perfil_usr_add, activo_usr_add, data["nombre_usuario_perfil"]))
             connection.commit()
-        flash("DATOS INGRESADOS CON EXITO", "success")
+        # flash("DATOS INGRESADOS CON EXITO", "success")
         return cursor
 
 
-# class actualizar_public_cliente:
-#     @staticmethod
-#     def update_public_cliente(list):
-#         try:
-#
-#             connection = psycopg2.connect(
-#                 database="central2010", user="postgres", password="atentusdesa", host="172.16.5.117", port="5432")
-#             cursor = connection.cursor()
-#             for data in list:
-#
-#                 cursor.execute(""" UPDATE public.cliente_usuario SET  activo_perfil_marcado  = 'no' WHERE cliente_usuario_id = %s """,
-#                                (data["id_usuario_perfil"],))
-#                 connection.commit()
-#
-#         except:
-#             flash("NO ES POSIBLE ACTUALIZAR !!", "danger")
-#             return cursor
-
-
-class actualizar_rtrim:  # ELIMINA ESPACIOS EN BLANCO AL INSERTAR
-    @staticmethod
-    def update_rtrim():
-        try:
-
-            connection = psycopg2.connect(
-                database="central2010", user="postgres", password="atentusdesa", host="172.16.5.117", port="5432")
-            cursor = connection.cursor()
-            cursor.execute(
-                """ UPDATE marcado.perfil_usuario SET cliente_usuario_id=rtrim(cliente_usuario_id) """)
-            connection.commit()
-        except:
-            flash("NO ES POSIBLE ACTUALIZAR  RTRIM!!", "danger")
-            return cursor
 
 
 class consulta_cache:

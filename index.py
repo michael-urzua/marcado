@@ -1,4 +1,5 @@
 # @TODO:Agregar SHEBANG!!
+# -*- coding: utf-8 -*-
 # /srv/proyecto/entorno_virtual/bin/python
 from flask import Flask, render_template, request, session, redirect, url_for, send_file, flash
 from datetime import datetime, date, time, timedelta
@@ -6,7 +7,7 @@ from pytz import timezone as pytztimezone
 import pytz
 import requests
 from data import   consulta_user_compania, consulta_user, consulta_user_perfiles, consulta_perfil, insertar_registro_perfil, \
-     actualizar_rtrim, actualiza_perfil,consulta_objetivo,consulta_cache,borrar_cache,\
+     actualiza_perfil,consulta_objetivo,consulta_cache,borrar_cache,\
     consulta_cliente,consulta_zona,inserta_marcadoDatos,inserta_bitacora
 
 from utils.get_token import get
@@ -220,10 +221,13 @@ def insertar_perfil():
     cursor = insertar_registro_perfil.insert_perfil(
         listUsr, perfil_usr_add, activo_usr_add)
     if cursor != False:
-        # cursor2 = actualizar_public_cliente.update_public_cliente(listUsr)
-        cursor3 = actualizar_rtrim.update_rtrim()
+        flash("DATOS INGRESADOS CON EXITO", "success")
+        return redirect(url_for('mantenedor'))
+    else:
 
-    return redirect(url_for('mantenedor'))
+        flash("ERROR AL INGRESAR DATOS", "danger")
+        return redirect(url_for('mantenedor'))
+
 
 
 def toUTC(tz, datetime):
@@ -287,7 +291,8 @@ def insertar_marcado():
             flash("NO ENCONTRO DATOS DE CACHE PARA BORRAR ", "danger")
 
     else:
-        flash("NO SE REALIZA MARCADO DE DATOS ", "danger")
+        flash(" OCURRIÓ UN ERROR AL INGRESAR EL MARCADO, FAVOR REVISAR QUE \
+        PERIODO INGRESA NO SE SUPERPONGA CON OTRO ", "danger")
 
     return redirect(url_for('inicio'))
 
