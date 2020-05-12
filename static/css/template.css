@@ -7,6 +7,29 @@ html {
   background-image: url("/static/imagenes/fondo_nuevo.jpg");
 }
 
+.btn-danger.custom-btn {
+	background-color: #678181;
+	border-color: #678181;
+  color: white;
+}
+
+.btn-warning.custom-btn2 {
+	background-color: #2e5359;
+	border-color: #2e5359;
+  color: white;
+}
+.btn-warning.custom-btn3 {
+	background-color: #315c65;
+	border-color: #315c65;
+  color: white;
+}
+
+.btn-warning.custom-btnmante {
+	background-color: #013a4d;
+	border-color: #013a4d;
+  color: white;
+}
+
 .html_login{
   background-size: cover;
   background-repeat: no-repeat;
@@ -121,12 +144,13 @@ li a {
   text-decoration: none;
 }
 
-li a:hover:not(.active) {
+/* li a:hover:not(.active) {
   background-color: #f0f0f0;
-}
+} */
 
 .active {
-  background-color: #c0392b;
+  background-color: #ffc107;
+  /* background-color: #c0392b; */
 }
 
 .col-menu {

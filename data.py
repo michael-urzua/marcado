@@ -140,8 +140,6 @@ class insertar_registro_perfil:
         return cursor
 
 
-
-
 class consulta_cache:
     @staticmethod
     def select_cache(objetivo,fecha_inicial):
@@ -218,7 +216,7 @@ class consulta_zona:
 
 class inserta_marcadoDatos:
     @staticmethod
-    def insert_marcadoDatos(objetivo,nodos,hlocal_inicio,hlocal_termino,motivo,autorizacion):
+    def insert_marcadoDatos(objetivo,nodos,hlocal_inicio,hlocal_termino,motivo):
         try:
             connection = psycopg2.connect(
                 database="central2010", user="postgres", password="atentusdesa", host="172.16.5.117", port="5432")
@@ -228,10 +226,11 @@ class inserta_marcadoDatos:
                 "SELECT MAX( periodo_marcado_id ) + 1 FROM public.periodo_marcado")
             periodo_marcado_id = cursor.fetchone()
 
+            desarrollador = session['cliente_usuario'][0][0]
             cursor.execute("""INSERT INTO public.periodo_marcado
                                 (periodo_marcado_id,objetivo_id, nodos_id, fecha_inicio, fecha_termino,motivo, autorizacion)
                                     VALUES (%s,%s,%s,%s,%s,%s,%s)""",
-                           (periodo_marcado_id,objetivo,nodos,hlocal_inicio,hlocal_termino,motivo,autorizacion))
+                           (periodo_marcado_id,objetivo,nodos,hlocal_inicio,hlocal_termino,motivo,desarrollador))
             connection.commit()
             # flash("DATOS INGRESADOS CON EXITO", "success")
             return cursor
@@ -242,26 +241,28 @@ class inserta_marcadoDatos:
 class inserta_bitacora:
     @staticmethod
     def insert_bitacora(fecha_entrega,nombre_proyecto):
+        try:
+            connection = psycopg2.connect(
+                database="central2010", user="postgres", password="atentusdesa", host="172.16.5.117", port="5432")
+            cursor = connection.cursor()
 
-        connection = psycopg2.connect(
-            database="central2010", user="postgres", password="atentusdesa", host="172.16.5.117", port="5432")
-        cursor = connection.cursor()
+            desarrollador = session['cliente_usuario'][0][0]
 
-        desarrollador = session['cliente_usuario'][0][0]
+            cursor.execute(
+                "SELECT MAX( bitacora_id ) + 1 FROM log.bitacora")
+            bitacora_id = cursor.fetchone()
 
-        cursor.execute(
-            "SELECT MAX( bitacora_id ) + 1 FROM log.bitacora")
-        bitacora_id = cursor.fetchone()
+            cursor.execute(
+                "SELECT version FROM log.bitacora ORDER BY bitacora_id DESC LIMIT 1")
+            version = cursor.fetchone()
 
-        cursor.execute(
-            "SELECT version FROM log.bitacora ORDER BY bitacora_id DESC LIMIT 1")
-        version = cursor.fetchone()
+            cursor.execute("""INSERT into
+                                log.bitacora (bitacora_id,version,fecha_entrega, fecha_instalacion, desarrollador,
+                                            nombre_proyecto,tipo, instalado)
+                                values( %s,%s,%s,now(),%s,%s,'M','t');""",
+                                    (bitacora_id,version,fecha_entrega, desarrollador,nombre_proyecto))
+            connection.commit()
 
-        cursor.execute("""INSERT into
-                            log.bitacora (bitacora_id,version,fecha_entrega, fecha_instalacion, desarrollador,
-                                        nombre_proyecto,tipo, instalado)
-                            values( %s,%s,%s,now(),%s,%s,'M','t');""",
-                                (bitacora_id,version,fecha_entrega, desarrollador,nombre_proyecto))
-        connection.commit()
-        flash("DATOS INGRESADOS CON EXITO", "success")
-        return cursor
+            return cursor
+        except:
+            return False

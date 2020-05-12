@@ -254,9 +254,11 @@ def insertar_marcado():
     fecha_inicio = request.form['fecha_inicio']
     fecha_termino = request.form['fecha_termino']
     motivo = request.form['motivo']
-    autorizacion = request.form['autorizacion']
 
     fecha_inicial = fecha_inicio.split(" ")[0]
+
+    fecha_entrega = request.form['fecha_entrega']
+    nombre_proyecto = request.form['nombre_proyecto']
 
     cursor1 = consulta_cliente.select_cliente(objetivo)
     cliente = cursor1.fetchone()
@@ -274,7 +276,7 @@ def insertar_marcado():
 
     # INSERTAR MARCADO DE DATOS
     cursor2 = inserta_marcadoDatos.insert_marcadoDatos(
-        objetivo,nodos,hlocal_inicio,hlocal_termino,motivo,autorizacion)
+        objetivo,nodos,hlocal_inicio,hlocal_termino,motivo)
 
     if cursor2 != False:
         # CONSULTAR CACHE
@@ -282,6 +284,9 @@ def insertar_marcado():
         cache = cursor3.fetchall()
         q_cache = len(cache)
 
+        cursor = inserta_bitacora.insert_bitacora(fecha_entrega,nombre_proyecto)
+        if cursor == False:
+            flash("ERROR INSERT BITACORA", "danger")
         # BORRAR cache.cache_nivel1
         if q_cache > 0:
             cursor3 = borrar_cache.delete_cache(objetivo,fecha_inicial)
@@ -296,21 +301,6 @@ def insertar_marcado():
 
     return redirect(url_for('inicio'))
 
-
-
-@app.route("/insertar_bitacora", methods=['POST'])
-def insertar_bitacora():
-
-    variable = session_token(session)
-    if variable == 'False':
-        return render_template("login.html")
-
-    fecha_entrega = request.form['fecha_entrega']
-    nombre_proyecto = request.form['nombre_proyecto']
-
-    cursor = inserta_bitacora.insert_bitacora(fecha_entrega,nombre_proyecto)
-
-    return redirect(url_for('inicio'))
 
 
 

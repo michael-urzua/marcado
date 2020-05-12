@@ -15,11 +15,11 @@
   <!-- .......-CABECERA-....... -->
   <ul style="padding: 17px;filter:alpha(opacity=50); opacity:0.9;">
     <form action="/logout" method="POST">
-      <button style="float:right" type="submit" class="btn btn-danger btn-lg">Salir</button>
+      <button style="float:right" type="submit" class="btn btn-danger custom-btn btn-lg">Salir</button>
       <a style="float:right" class="navbar-brand">{{usuario}}</a>
-      <i class="far fa-user-circle" style="font-size:30px;float:right;padding: 5px;color:#e65d3f"></i>
+      <i class="far fa-user-circle" style="font-size:30px;float:right;padding: 5px;color:#073446"></i>
       <a style="float:right" class="navbar-brand">{{compania}}</a>
-      <i class="fas fa-university" style="font-size:30px;float:right;padding: 5px;color:#e65d3f"></i>
+      <i class="fas fa-university" style="font-size:30px;float:right;padding: 5px;color:#234854"></i>
     </form><br>
   </ul>
   <!-- .......-CABECERA-....... -->
@@ -44,13 +44,8 @@
         <!-- Nav pills -->
         <ul class="nav nav-pills" role="tablist" style="background-color: #ffc107;line-height: 43px;font-size: 19px;">
           <li class="nav-item">
-            <a class="activo" data-toggle="pill" onclick="ocultar()" href="#menu1" style="color: #060606;">Validar Objetivo</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" data-toggle="pill" href="#"></a>
-          </li>
-          <li class="nav-item">
-            <a class="activo" data-toggle="pill" onclick="ocultar()" href="#menu2" style="color: #060606;">Insert Bitacora</a>
+            <a  data-toggle="pill" onclick="ocultar()" href="#menu1">
+                <i class="fa fa-home"  title="Inicio" style="font-size:60px;float:right;padding: 5px;color:#002b3f"></i></a>
           </li>
         </ul><br>
 
@@ -88,7 +83,7 @@
             <div class="form-group col-md-1"></div>
             <div class="form-group col-md-3">
               <br>
-              <button style="background-color:#e65d3f" type="submit" class="btn btn-warning">Consultar</button>
+              <button  type="submit" class="btn btn-warning custom-btn2">Consultar</button>
             </div>
           </div>
         </form>
@@ -109,59 +104,12 @@
               <div class="form-group col-md-1"></div>
               <div class="form-group col-md-3">
                 <br>
-                <button style="background-color:#e65d3f" type="submit" class="btn btn-warning">Consultar</button>
+                <button  type="submit" class="btn btn-warning custom-btn2">Consultar</button>
               </div>
             </div>
           </form>
         </div>
 
-        <div id="menu2" class="container tab-pane fade" style="background-color: #ececec;"><br>
-
-          <form action="/insertar_bitacora" method="POST">
-            <hr width=50% align="center" size=10 noshade="noshade">
-
-            <div class="form-group row">
-              <div class="col-sm-3"></div>
-              <label for="inputfecha_inicio3" class="col-sm-2 col-form-label">Fecha de Entrega</label>
-              <div class="col-sm-4">
-                <div class="input-group date" id="datetimepicker1" data-target-input="nearest">
-                  <input type='text' class="form-control" name="fecha_entrega" required data-date-format="YYYY-MM-DD "
-                  oninvalid="setCustomValidity('El campo Fecha de Entrega es obligatorio')" oninput="setCustomValidity('')" />
-                  <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
-                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <script type="text/javascript">
-              $(function() {
-                $('#datetimepicker1').datetimepicker({
-                  locale: 'es',
-                  format: 'YYYY-MM-DD',
-                  maxDate : 'now'
-                });
-              });
-            </script>
-
-            <div class="form-group row">
-              <div class="col-sm-3"></div>
-              <label for="inputpaso3" class="col-sm-2 col-form-label">Nombre Proyecto</label>
-              <div class="col-sm-4">
-                <input type="text" class="form-control" name="nombre_proyecto" required
-                oninvalid="setCustomValidity('El campo Nombre Proyecto es obligatorio')" oninput="setCustomValidity('')" />
-              </div>
-            </div><br>
-
-            <div class="form-group row">
-              <div class="col-sm-6"></div>
-              <div class="col-sm-4">
-                <button style="background-color:#e65d3f" type="submit" class="btn btn-warning">Guardar</button>
-              </div>
-            </div>
-          </form>
-
-        </div>
       </div>
 
     </div>
@@ -173,7 +121,7 @@
     <div id="marcado" class="jumbotron ">
       <form action="/insertar_marcado" method="POST">
         <p align="center">
-        <h2> Marcado de datos </h2>
+        <h2> MARCADO DE DATOS </h2>
         <p>
           <hr width=50% align="center" size=10 noshade="noshade">
 
@@ -196,8 +144,8 @@
           <div class="col-sm-3"></div>
           <label for="inputpaso3" class="col-sm-2 col-form-label"></label>
           <div class="col-sm-3">
-            <input type="button" class="pasar izq form-control btn btn-warning" value="Pasar »"><br><br>
-            <input type="button" class="pasar_dere der form-control btn btn-warning" value="« Quitar">
+            <input type="button" class="pasar izq form-control btn btn-warning custom-btn3" value="Pasar »"><br><br>
+            <input type="button" class="pasar_dere der form-control btn btn-warning custom-btn3" value="« Quitar">
           </div>
         </div>
 
@@ -284,18 +232,56 @@
           </div>
         </div>
 
-        <div class="form-group row">
+        <!-- <div class="form-group row">
           <div class="col-sm-3"></div>
           <label for="inputpaso3" class="col-sm-2 col-form-label">Autorizaci&oacute;n</label>
           <div class="col-sm-4">
             <input type="text" class="form-control" name="autorizacion" required oninvalid="setCustomValidity('El campo Autorizaci&oacute;n es obligatorio')" oninput="setCustomValidity('')" />
           </div>
-        </div><br>
+        </div> -->
+
+
+        <hr width=50% align="center" size=10 noshade="noshade">
+
+        <div class="form-group row">
+          <div class="col-sm-3"></div>
+          <label for="inputfecha_inicio3" class="col-sm-2 col-form-label">Fecha de Entrega</label>
+          <div class="col-sm-4">
+            <div class="input-group date" id="datetimepicker1" data-target-input="nearest">
+              <input type='text' class="form-control" name="fecha_entrega" required data-date-format="YYYY-MM-DD "
+              oninvalid="setCustomValidity('El campo Fecha de Entrega es obligatorio')" oninput="setCustomValidity('')" />
+              <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
+                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <script type="text/javascript">
+          $(function() {
+            $('#datetimepicker1').datetimepicker({
+              locale: 'es',
+              format: 'YYYY-MM-DD',
+              maxDate : 'now'
+            });
+          });
+        </script>
+
+        <div class="form-group row">
+          <div class="col-sm-3"></div>
+          <label for="inputpaso3" class="col-sm-2 col-form-label">Nombre Proyecto</label>
+          <div class="col-sm-4">
+            <input type="text" class="form-control" name="nombre_proyecto" required
+            oninvalid="setCustomValidity('El campo Nombre Proyecto es obligatorio')" oninput="setCustomValidity('')" />
+          </div>
+        </div>
+
+        <br>
 
         <div class="form-group row">
           <div class="col-sm-6"></div>
           <div class="col-sm-4">
-            <button style="background-color:#e65d3f" type="submit" onclick="mostar()" class="btn btn-warning">Guardar</button>
+            <button  type="submit" onclick="mostar()" class="btn btn-warning custom-btn2">Guardar</button>
           </div>
         </div>
 
