@@ -69,7 +69,7 @@ class consulta_user:
                                 	SELECT
                                 		cliente_usuario_id :: INTEGER
                                 	FROM
-                                		marcado.perfil_usuario
+                                		marcadodatos.perfil_usuario
                                 );  """)
             return cursor
         except:
@@ -82,7 +82,7 @@ class consulta_user_perfiles:
         try:
             cursor = conexion.conect_post()
             cursor.execute("""SELECT a2.nombre_perfil, a1.activo, a1.nombre_usuario,a1.id_perfil_usuario
-                              FROM marcado.perfil_usuario  a1 inner join marcado.perfil a2
+                              FROM marcadodatos.perfil_usuario  a1 inner join marcadodatos.perfil a2
                               ON a1.perfil_id = a2.perfil_id""")
             return cursor
         except:
@@ -93,9 +93,9 @@ class actualiza_perfil:
     def update_perfil(nombre_perfil, activo, id_perfil_usuario):
         try:
             connection = psycopg2.connect(
-                database="central2010", user="postgres", password="atentusdesa", host="172.16.5.117", port="5432")
+                database="central2010", user="postgres", password="atentusdesa", host="172.16.5.124", port="5432")
             cursor = connection.cursor()
-            cursor.execute(""" UPDATE marcado.perfil_usuario SET  perfil_id=%s, activo=%s WHERE id_perfil_usuario =%s """,
+            cursor.execute(""" UPDATE marcadodatos.perfil_usuario SET  perfil_id=%s, activo=%s WHERE id_perfil_usuario =%s """,
                            (nombre_perfil, activo, id_perfil_usuario))
 
             connection.commit()
@@ -113,7 +113,7 @@ class consulta_perfil:
             print"usuario",usuario
             cursor = conexion.conect_post()
             cursor.execute("""SELECT a1.nombre_perfil, b2.activo
-                                  FROM marcado.perfil a1 inner join marcado.perfil_usuario b2
+                                  FROM marcadodatos.perfil a1 inner join marcadodatos.perfil_usuario b2
                                   ON a1.perfil_id = b2.perfil_id
                                   where b2.cliente_usuario_id = '%s'""", (usuario,))
             return cursor
@@ -126,13 +126,13 @@ class insertar_registro_perfil:
     def insert_perfil(list, perfil_usr_add, activo_usr_add):
 
         connection = psycopg2.connect(
-            database="central2010", user="postgres", password="atentusdesa", host="172.16.5.117", port="5432")
+            database="central2010", user="postgres", password="atentusdesa", host="172.16.5.124", port="5432")
         cursor = connection.cursor()
         for data in list:
             cursor.execute(
-                "SELECT MAX( id_perfil_usuario ) + 1 FROM marcado.perfil_usuario")
+                "SELECT MAX( id_perfil_usuario ) + 1 FROM marcadodatos.perfil_usuario")
             id_datos = cursor.fetchone()
-            cursor.execute("""INSERT INTO marcado.perfil_usuario(id_perfil_usuario, cliente_usuario_id, perfil_id, activo, nombre_usuario)
+            cursor.execute("""INSERT INTO marcadodatos.perfil_usuario(id_perfil_usuario, cliente_usuario_id, perfil_id, activo, nombre_usuario)
                                     VALUES (%s,%s,%s,%s,%s)""",
                            (id_datos, data["id_usuario_perfil"], perfil_usr_add, activo_usr_add, data["nombre_usuario_perfil"]))
             connection.commit()
@@ -165,7 +165,7 @@ class borrar_cache:
     def delete_cache(objetivo,fecha_inicial):
         try:
             connection = psycopg2.connect(
-                database="central2010", user="postgres", password="atentusdesa", host="172.16.5.117", port="5432")
+                database="central2010", user="postgres", password="atentusdesa", host="172.16.5.124", port="5432")
             cursor = connection.cursor()
             cursor.execute(""" DELETE FROM
                                 		cache.cache_nivel1
@@ -219,7 +219,7 @@ class inserta_marcadoDatos:
     def insert_marcadoDatos(objetivo,nodos,hlocal_inicio,hlocal_termino,motivo):
         try:
             connection = psycopg2.connect(
-                database="central2010", user="postgres", password="atentusdesa", host="172.16.5.117", port="5432")
+                database="central2010", user="postgres", password="atentusdesa", host="172.16.5.124", port="5432")
             cursor = connection.cursor()
 
             cursor.execute(
@@ -243,7 +243,7 @@ class inserta_bitacora:
     def insert_bitacora(fecha_entrega,nombre_proyecto):
         try:
             connection = psycopg2.connect(
-                database="central2010", user="postgres", password="atentusdesa", host="172.16.5.117", port="5432")
+                database="central2010", user="postgres", password="atentusdesa", host="172.16.5.124", port="5432")
             cursor = connection.cursor()
 
             desarrollador = session['cliente_usuario'][0][0]
