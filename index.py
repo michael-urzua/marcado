@@ -7,7 +7,7 @@ from pytz import timezone as pytztimezone
 import pytz
 import requests
 from data import   consulta_user_compania, consulta_user, consulta_user_perfiles, consulta_perfil, insertar_registro_perfil, \
-     actualiza_perfil,consulta_objetivo,consulta_cache,borrar_cache,\
+     actualiza_perfil,consulta_objetivo,consulta_cache,borrar_cache,consulta_experiracion,\
     consulta_cliente,consulta_zona,inserta_marcadoDatos,inserta_bitacora
 
 from utils.get_token import get
@@ -137,19 +137,26 @@ def consultar_bco_chile():
     session['id_objetivo'] = id_objetivo
     obje = session['id_objetivo']
 
-
-    cursor = consulta_objetivo.select_objetivo(id_objetivo)
-    objetivo = cursor.fetchall()
-    q_obejtivo = len(objetivo)
-
     nombre = session['cliente_usuario'][0][0]
     cliente = session['cliente_usuario'][0][1]
 
-    if q_obejtivo > 0:
-        return render_template("marcado.html", usuario=nombre,compania=cliente,cantidad = q_obejtivo, obj = id_objetivo, isp = objetivo )
+    cursor = consulta_experiracion.select_experiracion(id_objetivo)
+    objetivo = cursor.fetchall()
+    q_existe = len(objetivo)
+    if q_existe > 0:
+
+        cursor1 = consulta_objetivo.select_objetivo(id_objetivo)
+        objetivo1 = cursor1.fetchall()
+        q_obejtivo = len(objetivo1)
+
+        if q_obejtivo > 0:
+            return render_template("marcado.html", usuario=nombre,compania=cliente,cantidad = q_obejtivo, obj = id_objetivo, isp = objetivo1 )
+        else:
+            flash("OBJETIVO SIN NODO", "danger")
+            return render_template("marcado.html", usuario=nombre,compania=cliente,cantidad = q_obejtivo)
     else:
-        flash("OBJETIVO SIN RESPUESTA", "danger")
-        return render_template("marcado.html", usuario=nombre,compania=cliente,cantidad = q_obejtivo)
+        flash("OBJETIVO EXPIRADO", "danger")
+        return render_template("marcado.html", usuario=nombre,compania=cliente)
 
 @app.route("/mantenedor", methods=["GET", "POST"])
 def mantenedor():

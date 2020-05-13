@@ -8,6 +8,24 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
+class consulta_experiracion:
+    @staticmethod
+    def select_experiracion(id_objetivo):
+        try:
+
+            cursor = conexion.conect_post()
+            cursor.execute("""SELECT
+                                cliente_usuario_id
+                                FROM cliente_usuario cu, cliente_mapa_cliente_objetivo co, objetivo o
+                                WHERE cu.cliente_id = co.cliente_id
+                                AND o.objetivo_id = co.objetivo_id
+                                AND co.objetivo_id = %s
+                                AND (o.fecha_expiracion >= NOW() OR o.fecha_expiracion IS NULL)
+                                LIMIT 1""", (id_objetivo,))
+            return cursor
+        except:
+            return False
+
 
 class consulta_objetivo:
     @staticmethod
