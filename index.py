@@ -265,8 +265,11 @@ def insertar_marcado():
     hora_final = fechas.split(" ")[5]
     total_final = fecha_final + " " + hora_final
 
-    motivo = request.form['motivo']
+    if total_inicial == total_final:
+        flash("HA INGRESADO HORARIOS IGUALES, CAMBIAR RANGO", "danger")
+        return redirect(url_for('inicio'))
 
+    motivo = request.form['motivo']
 
     fecha_entrega = request.form['fecha_entrega']
     nombre_proyecto = request.form['nombre_proyecto']

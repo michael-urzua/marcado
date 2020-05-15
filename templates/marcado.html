@@ -193,15 +193,14 @@
 
         <script>
         $(function() {
-           var today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+           var today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()+1);
           $('input[name="fechas"]').daterangepicker({
             maxDate : today,
+            minDate : '-2000/01/01',
             timePicker: true,
             startDate: moment().startOf('hour'),
-            endDate: moment().startOf('hour').add(32, 'hour'),
-
+            endDate: moment().startOf('hour').add(24, 'hour'),
             locale: {
-
               format: 'YYYY-MM-DD hh:mm '
             }
           });
@@ -232,7 +231,10 @@
 
             <script>
             $(function() {
+              var today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
               $('input[name="fecha_entrega"]').daterangepicker({
+                maxDate : today,
+                minDate : '-2000/01/01',
                 singleDatePicker: true,
                 showDropdowns: true,
                 locale: {
