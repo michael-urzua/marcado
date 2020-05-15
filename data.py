@@ -15,7 +15,7 @@ class consulta_experiracion:
 
             cursor = conexion.conect_post()
             cursor.execute("""SELECT
-                                cliente_usuario_id
+                                cliente_usuario_id,o.nombre
                                 FROM cliente_usuario cu, cliente_mapa_cliente_objetivo co, objetivo o
                                 WHERE cu.cliente_id = co.cliente_id
                                 AND o.objetivo_id = co.objetivo_id
@@ -128,7 +128,6 @@ class consulta_perfil:
     def select_perfil():
         try:
             usuario = session['cliente_usuario_id']
-            print"usuario",usuario
             cursor = conexion.conect_post()
             cursor.execute("""SELECT a1.nombre_perfil, b2.activo
                                   FROM marcadodatos.perfil a1 inner join marcadodatos.perfil_usuario b2

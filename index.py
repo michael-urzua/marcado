@@ -46,9 +46,6 @@ def acceso():
         flash("Problemas en la conexion API ", "danger")
         return redirect(url_for('index'))
 
-        # DESDE AQUI PARA ARRIBA ES LO TUYO ABAJO  SON COSAS DE VARIABLES NOMAS
-        # DESPUES SIGUE Y VIEN session_token(var_session):
-
     status = r["status"]
 
     if status == 0:
@@ -127,7 +124,6 @@ def inicio():
 
 @app.route("/consultar", methods=["GET", "POST"])
 def consultar_bco_chile():
-    # from operator import itemgetter
 
     variable = session_token(session)
     if variable == 'False':
@@ -142,6 +138,7 @@ def consultar_bco_chile():
 
     cursor = consulta_experiracion.select_experiracion(id_objetivo)
     objetivo = cursor.fetchall()
+    nom_objetivo = objetivo[0][1]
     q_existe = len(objetivo)
     if q_existe > 0:
 
@@ -150,7 +147,8 @@ def consultar_bco_chile():
         q_obejtivo = len(objetivo1)
 
         if q_obejtivo > 0:
-            return render_template("marcado.html", usuario=nombre,compania=cliente,cantidad = q_obejtivo, obj = id_objetivo, isp = objetivo1 )
+            return render_template("marcado.html", usuario=nombre,compania=cliente,cantidad = q_obejtivo,
+                                    obj = id_objetivo, isp = objetivo1, nom_objetivo = nom_objetivo)
         else:
             flash("OBJETIVO SIN NODO", "danger")
             return render_template("marcado.html", usuario=nombre,compania=cliente,cantidad = q_obejtivo)
@@ -258,11 +256,17 @@ def insertar_marcado():
         nodos = "{"+ nodo_final[1:120] + "}"
 
 
-    fecha_inicio = request.form['fecha_inicio']
-    fecha_termino = request.form['fecha_termino']
+    fechas = request.form['fechas']
+    fecha_inicial = fechas.split(" ")[0]
+    hora_inicial = fechas.split(" ")[1]
+    total_inicial = fecha_inicial + " " + hora_inicial
+
+    fecha_final = fechas.split(" ")[4]
+    hora_final = fechas.split(" ")[5]
+    total_final = fecha_final + " " + hora_final
+
     motivo = request.form['motivo']
 
-    fecha_inicial = fecha_inicio.split(" ")[0]
 
     fecha_entrega = request.form['fecha_entrega']
     nombre_proyecto = request.form['nombre_proyecto']
@@ -277,8 +281,8 @@ def insertar_marcado():
     session['zona'] = zona
     zona = session['zona'][0]
 
-    hlocal_inicio = toUTC(pytztimezone(zona), datetime.strptime(fecha_inicio, '%Y-%m-%d %H:%M:%S' ))
-    hlocal_termino = toUTC(pytztimezone(zona), datetime.strptime(fecha_termino, '%Y-%m-%d %H:%M:%S' ))
+    hlocal_inicio = toUTC(pytztimezone(zona), datetime.strptime(total_inicial, '%Y-%m-%d %H:%M' ))
+    hlocal_termino = toUTC(pytztimezone(zona), datetime.strptime(total_final, '%Y-%m-%d %H:%M' ))
 
 
     # INSERTAR MARCADO DE DATOS

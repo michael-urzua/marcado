@@ -127,6 +127,14 @@
 
             <input type="hidden" class="form-control" name="objetivo" value="{{obj}}" />
 
+            <div class="form-group row">
+              <div class="col-sm-3"></div>
+              <label for="inputpaso3" class="col-sm-2 col-form-label"><b>Objetivo</b></label>
+              <div class="col-sm-4">
+                <input type="text" class="form-control" style=" background-color: #ffc107;" value="{{nom_objetivo}}" disabled />
+              </div>
+            </div>
+
         <div class="form-group row">
           <div class="col-sm-3"></div>
           <label for="inputpaso3" class="col-sm-2 col-form-label">Seleccione Nodo</label>
@@ -144,7 +152,7 @@
           <div class="col-sm-3"></div>
           <label for="inputpaso3" class="col-sm-2 col-form-label"></label>
           <div class="col-sm-3">
-            <input type="button" class="pasar izq form-control btn btn-warning custom-btn3" value="Pasar »"><br><br>
+            <input type="button" class="pasar izq form-control btn btn-warning custom-btn3" value="Agregar »"><br><br>
             <input type="button" class="pasar_dere der form-control btn btn-warning custom-btn3" value="« Quitar">
           </div>
         </div>
@@ -172,56 +180,32 @@
         </script>
 
 
-
-
-
-        <div class="form-group row">
+         <div class="form-group row">
           <div class="col-sm-3"></div>
-          <label for="inputfecha_inicio3" class="col-sm-2 col-form-label">Fecha Inicio</label>
+          <label for="inputfecha_inicio3" class="col-sm-2 col-form-label">Seleccione Fecha Inicio/Termino</label>
           <div class="col-sm-4">
-            <div class="input-group date" id="datetimepicker7" data-target-input="nearest">
-              <input type='text' class="form-control" name="fecha_inicio" required data-date-format="YYYY-MM-DD HH:mm:ss" oninvalid="setCustomValidity('El campo Fecha de Inicio es obligatorio')" oninput="setCustomValidity('')" />
-              <div class="input-group-append" data-target="#datetimepicker7" data-toggle="datetimepicker">
-                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-              </div>
+            <div class="input-group date" id="" data-target-input="nearest">
+              <input type='text' class="form-control" name="fechas" required data-date-format="YYYY-MM-DD HH:mm"
+              oninvalid="setCustomValidity('El campo Fecha Inicio/Termino es obligatorio')" oninput="setCustomValidity('')" />
             </div>
           </div>
         </div>
 
-        <div class="form-group row">
-          <div class="col-sm-3"></div>
-          <label for="inputfecha_inicio3" class="col-sm-2 col-form-label">Fecha Termino</label>
-          <div class="col-sm-4">
-            <div class="input-group date" id="datetimepicker8" data-target-input="nearest">
-              <input type='text' class="form-control" name="fecha_termino" required data-date-format="YYYY-MM-DD HH:mm:ss" oninvalid="setCustomValidity('El campo Fecha de Termino es obligatorio')" oninput="setCustomValidity('')" />
-              <div class="input-group-append" data-target="#datetimepicker8" data-toggle="datetimepicker">
-                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <script>
+        $(function() {
+           var today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+          $('input[name="fechas"]').daterangepicker({
+            maxDate : today,
+            timePicker: true,
+            startDate: moment().startOf('hour'),
+            endDate: moment().startOf('hour').add(32, 'hour'),
 
+            locale: {
 
-        <script type="text/javascript">
-          $(function() {
-            $('#datetimepicker7').datetimepicker({
-              locale: 'es',
-              // format: 'DD-MM-YYYY HH:mm:ss'
-              format: 'YYYY-MM-DD HH:mm:ss'
-            });
-            $('#datetimepicker8').datetimepicker({
-              locale: 'es',
-              // format: 'DD-MM-YYYY HH:mm:ss'
-              format: 'YYYY-MM-DD HH:mm:ss'
-
-            });
-            $("#datetimepicker7").on("change.datetimepicker", function(e) {
-              $('#datetimepicker8').datetimepicker('minDate', e.date);
-            });
-            $("#datetimepicker8").on("change.datetimepicker", function(e) {
-              $('#datetimepicker7').datetimepicker('maxDate', e.date);
-            });
+              format: 'YYYY-MM-DD hh:mm '
+            }
           });
+        });
         </script>
 
         <div class="form-group row">
@@ -232,40 +216,32 @@
           </div>
         </div>
 
-        <!-- <div class="form-group row">
-          <div class="col-sm-3"></div>
-          <label for="inputpaso3" class="col-sm-2 col-form-label">Autorizaci&oacute;n</label>
-          <div class="col-sm-4">
-            <input type="text" class="form-control" name="autorizacion" required oninvalid="setCustomValidity('El campo Autorizaci&oacute;n es obligatorio')" oninput="setCustomValidity('')" />
-          </div>
-        </div> -->
-
 
         <hr width=50% align="center" size=10 noshade="noshade">
 
-        <div class="form-group row">
+         <div class="form-group row">
           <div class="col-sm-3"></div>
           <label for="inputfecha_inicio3" class="col-sm-2 col-form-label">Fecha de Entrega</label>
           <div class="col-sm-4">
-            <div class="input-group date" id="datetimepicker1" data-target-input="nearest">
+            <div class="input-group date" id="" data-target-input="nearest">
               <input type='text' class="form-control" name="fecha_entrega" required data-date-format="YYYY-MM-DD "
               oninvalid="setCustomValidity('El campo Fecha de Entrega es obligatorio')" oninput="setCustomValidity('')" />
-              <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
-                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-              </div>
             </div>
           </div>
         </div>
 
-        <script type="text/javascript">
-          $(function() {
-            $('#datetimepicker1').datetimepicker({
-              locale: 'es',
-              format: 'YYYY-MM-DD',
-              maxDate : 'now'
+            <script>
+            $(function() {
+              $('input[name="fecha_entrega"]').daterangepicker({
+                singleDatePicker: true,
+                showDropdowns: true,
+                locale: {
+                  format: 'YYYY-MM-DD'
+                }
+              });
             });
-          });
-        </script>
+            </script>
+
 
         <div class="form-group row">
           <div class="col-sm-3"></div>
