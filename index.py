@@ -279,8 +279,8 @@ def insertar_marcado():
     session['zona'] = zona
     zona = session['zona'][0]
 
-    hlocal_inicio = toUTC(pytztimezone(zona), datetime.strptime(fecha_inicio, '%Y-%m-%d %H:%M' ))
-    hlocal_termino = toUTC(pytztimezone(zona), datetime.strptime(fecha_termino, '%Y-%m-%d %H:%M' ))
+    hlocal_inicio = toUTC(pytztimezone(zona), datetime.strptime(fecha_inicio, '%Y-%m-%d %H:%M:%S' ))
+    hlocal_termino = toUTC(pytztimezone(zona), datetime.strptime(fecha_termino, '%Y-%m-%d %H:%M:%S' ))
 
     # INSERTAR MARCADO DE DATOS
     cursor2 = inserta_marcadoDatos.insert_marcadoDatos(
