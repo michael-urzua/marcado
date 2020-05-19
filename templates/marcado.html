@@ -129,11 +129,13 @@
           </div>
         </div>
 
+
         <div class="form-group row">
           <div class="col-sm-3"></div>
           <label for="inputpaso3" class="col-sm-2 col-form-label">Seleccione Nodo</label>
           <div class="col-sm-4">
-            <select class="selectpicker form-control" onclick="myFunction()" data-live-search="true" name="origen" id="origen" style="background-color: #fff5eb;width: 481px;">
+            <select class="selectpicker form-control"  data-live-search="true"
+            name="origen" id="origen" style="background-color: #fff5eb;width: 481px;">
               {% for nodo in isp %}
               <option data-tokens="{{nodo.0}}">{{nodo.0}}</option>
               {%endfor%}
@@ -156,7 +158,8 @@
           <div class="col-sm-3"></div>
           <label for="inputpaso3" class="col-sm-2 col-form-label">&nbsp;</label>
           <div class="col-sm-4">
-            <select name="nodo" id="nodo" onclick="myFunction()" onkeyup="validar()" multiple="multiple" size="3" class="form-control inputFormu" style="background-color: #fff5eb;">
+            <select name="nodo" id="nodo"  onkeyup="validar()" multiple="multiple" size="3"
+            class="form-control inputFormu" style="background-color: #fff5eb;">
 
             </select>
           </div>
@@ -176,26 +179,80 @@
 
         <div class="form-group row">
           <div class="col-sm-3"></div>
-          <label for="inputfecha_inicio3" class="col-sm-2 col-form-label">Seleccione Fecha Inicio/Termino</label>
+          <label for="inputpaso3" class="col-sm-2 col-form-label">Fecha de inicio</label>
           <div class="col-sm-4">
-            <div class="input-group date" id="" data-target-input="nearest">
-              <input type='text' class="form-control" id="fechas" name="fechas" required data-date-format="YYYY-MM-DD HH:mm" oninvalid="setCustomValidity('El campo Fecha Inicio/Termino es obligatorio')" oninput="setCustomValidity('')" />
+            <div class="input-group date" id="datetimepicker2" data-target-input="nearest">
+              <input type="text" class="form-control datetimepicker-input" data-date-format="YYYY-MM-DD HH:mm"
+                    id="fecha_inicio" name="fecha_inicio" data-target="#datetimepicker2" />
+              <div class="input-group-append" data-target="#datetimepicker2" data-toggle="datetimepicker">
+                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <script type="text/javascript">
+          $(function() {
+            $('#datetimepicker2').datetimepicker({
+              maxDate: 'now',
+              minDate: '2000/01/01',
+              format: 'YYYY-MM-DD HH:mm',
+              locale: 'es'
+            });
+          });
+        </script>
+
+
+        <script>
+          function fecha() {
+            var x = document.getElementById("fecha_inicio").value;
+            alert(x);
+            return x;
+          }
+        </script>
+
+        <div class="form-group row">
+          <div class="col-sm-3"></div>
+          <label for="inputpaso3" class="col-sm-2 col-form-label">Fecha de Termino</label>
+          <div class="col-sm-4">
+            <div class="input-group date" id="datetimepicker1" data-target-input="nearest">
+              <input type="text" class="form-control datetimepicker-input" data-date-format="YYYY-MM-DD HH:mm"
+                id="fecha_termino" name="fecha_termino" data-target="#datetimepicker1" />
+              <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
+                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+              </div>
             </div>
           </div>
         </div>
 
         <script>
+          function myFunction() {
+            var x = document.getElementById("fecha_inicio").value;
+            var y = document.getElementById("fecha_termino").value;
+
+            if (x == "") {
+              document.getElementById("fecha_inicio").focus();
+            }else if (y == "") {
+              document.getElementById("fecha_termino").focus();
+            }else if (y.trim() == x.trim()) {
+              alert("HA INGRESADO HORARIOS IGUALES, CAMBIAR RANGO");
+              document.getElementById("fecha_termino").focus();
+            }else if (x.trim() > y.trim()) {
+              alert("FECHA DE TERMINO ES MENOR A LA FECHA DE INICIO");
+              document.getElementById("fecha_termino").focus();
+            }
+
+
+          }
+        </script>
+
+        <script type="text/javascript">
           $(function() {
-            var today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() + 1);
-            $('input[name="fechas"]').daterangepicker({
-              maxDate: today,
-              minDate: '-2000/01/01',
-              timePicker: true,
-              startDate: moment().startOf('hour'),
-              endDate: moment().startOf('hour').add(24, 'hour'),
-              locale: {
-                format: 'YYYY-MM-DD hh:mm '
-              }
+            $('#datetimepicker1').datetimepicker({
+              maxDate: 'now',
+              minDate: '2000/01/01',
+              format: 'YYYY-MM-DD HH:mm',
+              locale: 'es',
             });
           });
         </script>
@@ -206,20 +263,11 @@
           <div class="col-sm-3"></div>
           <label for="inputpaso3" class="col-sm-2 col-form-label">Motivo</label>
           <div class="col-sm-4">
-            <input type="text" class="form-control inputFormu" onkeyup="validar()" id="motivo" name="motivo" required oninvalid="setCustomValidity('El campo Motivo es obligatorio')" oninput="setCustomValidity('')" onclick="myFunction()" />
+            <input type="text" class="form-control inputFormu" onkeyup="validar()"
+                    id="motivo" name="motivo" onclick="myFunction()" />
           </div>
         </div>
 
-        <script>
-          function myFunction() {
-            var x = document.getElementById("fechas").value;
-            var division = x.split("/")
-            if (division[0].trim() == division[1].trim()) {
-              alert("HA INGRESADO HORARIOS IGUALES, CAMBIAR RANGO");
-              document.getElementById("fechas").focus();
-            }
-          }
-        </script>
 
         <script type="text/javascript">
           function validar() {
@@ -231,6 +279,7 @@
               }
             }
             if (validado) {
+
               document.getElementById("btndesa").disabled = false;
 
             } else {
@@ -247,34 +296,36 @@
           <div class="col-sm-3"></div>
           <label for="inputfecha_inicio3" class="col-sm-2 col-form-label">Fecha de Entrega</label>
           <div class="col-sm-4">
-            <div class="input-group date" id="" data-target-input="nearest">
-              <input type='text' class="form-control inputFormu" onkeyup="validar()" id="fecha_entrega" name="fecha_entrega" required data-date-format="YYYY-MM-DD " oninvalid="setCustomValidity('El campo Fecha de Entrega es obligatorio')"
-                oninput="setCustomValidity('')" onclick="myFunction()" />
+            <div class="input-group date" id="datetimepicker4" data-target-input="nearest">
+              <input type='text' class="form-control datetimepicker-input" onkeyup="validar()" name="fecha_entrega"
+              data-date-format="YYYY-MM-DD " onclick="myFunction()" data-target="#datetimepicker4" />
+              <div class="input-group-append" data-target="#datetimepicker4" data-toggle="datetimepicker">
+                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+              </div>
             </div>
           </div>
         </div>
 
-        <script>
+        <script type="text/javascript">
           $(function() {
             var today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
-            $('input[name="fecha_entrega"]').daterangepicker({
+            $('#datetimepicker4').datetimepicker({
+              format: 'L',
               maxDate: today,
               minDate: '-2000/01/01',
-              singleDatePicker: true,
-              showDropdowns: true,
-              locale: {
-                format: 'YYYY-MM-DD'
-              }
+              locale: 'es',
+              format: 'YYYY-MM-DD'
             });
           });
         </script>
+
 
 
         <div class="form-group row">
           <div class="col-sm-3"></div>
           <label for="inputpaso3" class="col-sm-2 col-form-label">Nombre Proyecto</label>
           <div class="col-sm-4">
-            <input type="text" class="form-control inputFormu" onkeyup="validar()" name="nombre_proyecto" required oninvalid="setCustomValidity('El campo Nombre Proyecto es obligatorio')" oninput="setCustomValidity('')" onclick="myFunction()" />
+            <input type="text" class="form-control inputFormu" onkeyup="validar()" name="nombre_proyecto" onclick="myFunction()" />
           </div>
         </div>
 
@@ -283,7 +334,7 @@
         <div class="form-group row">
           <div class="col-sm-6"></div>
           <div class="col-sm-4">
-            <button type="submit" id="btndesa"  class="btn btn-warning custom-btn2 " disabled>Guardar</button>
+            <button type="submit" id="btndesa" class="btn btn-warning custom-btn2 " disabled>Guardar</button>
           </div>
         </div>
 

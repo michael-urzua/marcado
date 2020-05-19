@@ -255,22 +255,17 @@ def insertar_marcado():
         nodo_final = nodo_final + "," +nodo_final2
         nodos = "{"+ nodo_final[1:120] + "}"
 
+    fecha_inicio = request.form['fecha_inicio']
+    fecha_termino = request.form['fecha_termino']
 
-    fechas = request.form['fechas']
-    fecha_inicial = fechas.split(" ")[0]
-    hora_inicial = fechas.split(" ")[1]
-    total_inicial = fecha_inicial + " " + hora_inicial
+    fecha_inicial = fecha_inicio.split(" ")[0]
 
-    fecha_final = fechas.split(" ")[4]
-    hora_final = fechas.split(" ")[5]
-    total_final = fecha_final + " " + hora_final
 
-    if total_inicial == total_final:
+    if fecha_inicio == fecha_termino:
         flash("HA INGRESADO HORARIOS IGUALES, CAMBIAR RANGO", "danger")
         return redirect(url_for('inicio'))
 
     motivo = request.form['motivo']
-
     fecha_entrega = request.form['fecha_entrega']
     nombre_proyecto = request.form['nombre_proyecto']
 
@@ -284,9 +279,8 @@ def insertar_marcado():
     session['zona'] = zona
     zona = session['zona'][0]
 
-    hlocal_inicio = toUTC(pytztimezone(zona), datetime.strptime(total_inicial, '%Y-%m-%d %H:%M' ))
-    hlocal_termino = toUTC(pytztimezone(zona), datetime.strptime(total_final, '%Y-%m-%d %H:%M' ))
-
+    hlocal_inicio = toUTC(pytztimezone(zona), datetime.strptime(fecha_inicio, '%Y-%m-%d %H:%M' ))
+    hlocal_termino = toUTC(pytztimezone(zona), datetime.strptime(fecha_termino, '%Y-%m-%d %H:%M' ))
 
     # INSERTAR MARCADO DE DATOS
     cursor2 = inserta_marcadoDatos.insert_marcadoDatos(
@@ -311,7 +305,7 @@ def insertar_marcado():
 
     else:
         flash(" OCURRIÓ UN ERROR AL INGRESAR EL MARCADO, FAVOR REVISAR QUE \
-        PERIODO INGRESA NO SE SUPERPONGA CON OTRO ", "danger")
+        PERIODO INGRESADO NO SE SUPERPONGA CON OTRO ", "danger")
 
     return redirect(url_for('inicio'))
 
