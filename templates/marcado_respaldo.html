@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title>MARCADO DE DATOS</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  {% extends "librerias.html" %}
+</head>
+
+<body>
+
+  {% block content %}
+  <!-- .......-CABECERA-....... -->
+  <ul style="padding: 17px;filter:alpha(opacity=50); opacity:0.9;">
+    <form action="/logout" method="POST">
+      <button style="float:right" type="submit" class="btn btn-danger custom-btn btn-lg">Salir</button>
+      <a style="float:right" class="navbar-brand">{{usuario}}</a>
+      <i class="far fa-user-circle" style="font-size:30px;float:right;padding: 5px;color:#073446"></i>
+      <a style="float:right" class="navbar-brand">{{compania}}</a>
+      <i class="fas fa-university" style="font-size:30px;float:right;padding: 5px;color:#234854"></i>
+    </form><br>
+  </ul>
+  <!-- .......-CABECERA-....... -->
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+  {% for category, message in messages %}
+  <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+    <span>{{ message }}</span>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  {% endfor %}
+  {% endif %}
+  {% endwith %}
+
+  <div class="container">
+
+    <div class="jumbotron">
+      <div id="menu" style="height: 100px;">
+        <!-- Nav pills -->
+        <ul class="nav nav-pills" role="tablist" style="background-color: #ffc107;line-height: 43px;font-size: 19px;">
+          <li class="nav-item">
+            <a data-toggle="pill" onclick="ocultar()" href="#menu1">
+              <i class="fa fa-home" title="Inicio" style="font-size:60px;float:right;padding: 5px;color:#002b3f"></i></a>
+          </li>
+        </ul><br>
+
+        <script type="text/javascript">
+          function ocultar() {
+            document.getElementById('contenido').style.display = 'none';
+            document.getElementById('marcado').style.display = 'none';
+            // document.getElement("japaneseCalendar").disabled = true; // deshabilitar
+          }
+        </script>
+        <script type="text/javascript">
+          $('#menu li a').on('click', function() {
+            $('li a.activo').removeClass('activo');
+            $(this).addClass('activo');
+          });
+        </script>
+
+      </div>
+
+      <div id="contenido" class="container tab-pane" style="background-color: #ececec;"><br>
+        <form action="/consultar" method="POST">
+          <div class="form-row">
+            <div class="form-group col-md-3"></div>
+            <div class="form-group col-md-3">
+              <label for="inputnombre">N° Objetivo: </label>
+              <input type="text" class="form-control" name="id_objetivo" required oninvalid="setCustomValidity('El campo Objetivo es obligatorio')" oninput="setCustomValidity('')">
+            </div>
+            <div class="form-group col-md-1"></div>
+            <div class="form-group col-md-3">
+              <br>
+              <button type="submit" class="btn btn-warning custom-btn2">Consultar</button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- Tab panes -->
+      <div class="tab-content">
+
+        <div id="menu1" class="container tab-pane" style="background-color: #ececec;"><br>
+          <form action="/consultar" method="POST">
+            <div class="form-row">
+              <div class="form-group col-md-3"></div>
+              <div class="form-group col-md-3">
+                <label for="inputnombre">N° Objetivo: </label>
+                <input type="text" class="form-control" name="id_objetivo" required oninvalid="setCustomValidity('El campo Objetivo es obligatorio')" oninput="setCustomValidity('')">
+              </div>
+              <div class="form-group col-md-1"></div>
+              <div class="form-group col-md-3">
+                <br>
+                <button type="submit" class="btn btn-warning custom-btn2">Consultar</button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+      </div>
+
+    </div>
+
+
+    {% if cantidad is undefined %}
+
+    {%else%}
+    {% if cantidad > 0 %}
+    <div id="marcado" class="jumbotron ">
+
+      <form action="/insertar_marcado" method="POST">
+        <p align="center">
+        <h2> MARCADO DE DATOS </h2>
+        <p>
+          <hr width=50% align="center" size=10 noshade="noshade">
+
+          <input type="hidden" class="form-control" name="objetivo" value="{{obj}}" />
+
+        <div class="form-group row">
+          <div class="col-sm-3"></div>
+          <label for="inputpaso3" class="col-sm-2 col-form-label"><b>Objetivo</b></label>
+          <div class="col-sm-4">
+            <input type="text" class="form-control" style=" background-color: #ffc107;" value="{{nom_objetivo}}" disabled />
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <div class="col-sm-3"></div>
+          <label for="inputpaso3" class="col-sm-2 col-form-label">Seleccione Nodo</label>
+          <div class="col-sm-4">
+            <select class="selectpicker form-control" onclick="myFunction()" data-live-search="true" name="origen" id="origen" style="background-color: #fff5eb;width: 481px;">
+              {% for nodo in isp %}
+              <option data-tokens="{{nodo.0}}">{{nodo.0}}</option>
+              {%endfor%}
+            </select>
+          </div>
+        </div>
+
+
+        <div class="form-group row" style="width:110%;">
+          <div class="col-sm-3"></div>
+          <label for="inputpaso3" class="col-sm-2 col-form-label"></label>
+          <div class="col-sm-3">
+            <input type="button" class="pasar izq form-control btn btn-warning custom-btn3" value="Agregar »"><br><br>
+            <input type="button" class="pasar_dere der form-control btn btn-warning custom-btn3" value="« Quitar">
+          </div>
+        </div>
+
+
+        <div class="form-group row">
+          <div class="col-sm-3"></div>
+          <label for="inputpaso3" class="col-sm-2 col-form-label">&nbsp;</label>
+          <div class="col-sm-4">
+            <select name="nodo" id="nodo" onclick="myFunction()" onkeyup="validar()" multiple="multiple" size="3" class="form-control inputFormu" style="background-color: #fff5eb;">
+
+            </select>
+          </div>
+        </div>
+
+        <script type="text/javascript">
+          $().ready(function() {
+            $('.pasar').click(function() {
+              return !$('#origen option:selected').remove().appendTo('#nodo');
+            });
+            $('.pasar_dere').click(function() {
+              return !$('#nodo option:selected').remove().appendTo('#origen');
+            });
+          });
+        </script>
+
+
+        <div class="form-group row">
+          <div class="col-sm-3"></div>
+          <label for="inputfecha_inicio3" class="col-sm-2 col-form-label">Seleccione Fecha Inicio/Termino</label>
+          <div class="col-sm-4">
+            <div class="input-group date" id="" data-target-input="nearest">
+              <input type='text' class="form-control" id="fechas" name="fechas" required data-date-format="YYYY-MM-DD hh:mm A" oninvalid="setCustomValidity('El campo Fecha Inicio/Termino es obligatorio')" oninput="setCustomValidity('')" />
+            </div>
+          </div>
+        </div>
+
+        <script>
+          $(function() {
+            var today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() + 1);
+            $('input[name="fechas"]').daterangepicker({
+              maxDate: today,
+              minDate: '-2000/01/01',
+              timePicker: true,
+              startDate: moment().startOf('hour'),
+              endDate: moment().startOf('hour').add(32, 'hour'),
+              locale: {
+                format: 'YYYY-MM-DD hh:mm A'
+              }
+            });
+          });
+        </script>
+
+
+
+        <div class="form-group row">
+          <div class="col-sm-3"></div>
+          <label for="inputpaso3" class="col-sm-2 col-form-label">Motivo</label>
+          <div class="col-sm-4">
+            <input type="text" class="form-control inputFormu" onkeyup="validar()" id="motivo" name="motivo" required oninvalid="setCustomValidity('El campo Motivo es obligatorio')" oninput="setCustomValidity('')" onclick="myFunction()" />
+          </div>
+        </div>
+
+        <script>
+          function myFunction() {
+            var x = document.getElementById("fechas").value;
+            var division = x.split("/")
+            if (division[0].trim() == division[1].trim()) {
+              alert("HA INGRESADO HORARIOS IGUALES, CAMBIAR RANGO");
+              document.getElementById("fechas").focus();
+            }
+          }
+        </script>
+
+        <script type="text/javascript">
+          function validar() {
+            var validado = true;
+            elementos = document.getElementsByClassName("inputFormu");
+            for (i = 0; i < elementos.length; i++) {
+              if (elementos[i].value == "" || elementos[i].value == null) {
+                validado = false
+              }
+            }
+            if (validado) {
+              document.getElementById("btndesa").disabled = false;
+
+            } else {
+              document.getElementById("btndesa").disabled = true;
+
+            }
+          }
+        </script>
+
+
+        <hr width=50% align="center" size=10 noshade="noshade">
+
+        <div class="form-group row">
+          <div class="col-sm-3"></div>
+          <label for="inputfecha_inicio3" class="col-sm-2 col-form-label">Fecha de Entrega</label>
+          <div class="col-sm-4">
+            <div class="input-group date" id="" data-target-input="nearest">
+              <input type='text' class="form-control inputFormu" onkeyup="validar()" id="fecha_entrega" name="fecha_entrega" required data-date-format="YYYY-MM-DD " oninvalid="setCustomValidity('El campo Fecha de Entrega es obligatorio')"
+                oninput="setCustomValidity('')" onclick="myFunction()" />
+            </div>
+          </div>
+        </div>
+
+        <script>
+          $(function() {
+            var today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+            $('input[name="fecha_entrega"]').daterangepicker({
+              maxDate: today,
+              minDate: '-2000/01/01',
+              singleDatePicker: true,
+              showDropdowns: true,
+              locale: {
+                format: 'YYYY-MM-DD'
+              }
+            });
+          });
+        </script>
+
+
+        <div class="form-group row">
+          <div class="col-sm-3"></div>
+          <label for="inputpaso3" class="col-sm-2 col-form-label">Nombre Proyecto</label>
+          <div class="col-sm-4">
+            <input type="text" class="form-control inputFormu" onkeyup="validar()" name="nombre_proyecto" required oninvalid="setCustomValidity('El campo Nombre Proyecto es obligatorio')" oninput="setCustomValidity('')" onclick="myFunction()" />
+          </div>
+        </div>
+
+        <br>
+
+        <div class="form-group row">
+          <div class="col-sm-6"></div>
+          <div class="col-sm-4">
+            <button type="submit" id="btndesa"  class="btn btn-warning custom-btn2 " disabled>Guardar</button>
+          </div>
+        </div>
+
+      </form>
+    </div>
+
+    {% endif %}
+
+    {% endif %}
+
+  </div>
+
+
+
+  {% endblock %}
+</body>
