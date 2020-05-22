@@ -265,6 +265,11 @@ def insertar_marcado():
         flash("HA INGRESADO HORARIOS IGUALES, CAMBIAR RANGO", "danger")
         return redirect(url_for('inicio'))
 
+
+    if fecha_inicio > fecha_termino:
+        flash("HA INGRESADO UNA FECHA DE TERMINO MENOR A LA FECHA DE INICIO, CAMBIAR RANGO", "danger")
+        return redirect(url_for('inicio'))
+
     motivo = request.form['motivo']
     fecha_entrega = request.form['fecha_entrega']
     nombre_proyecto = request.form['nombre_proyecto']

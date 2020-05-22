@@ -158,7 +158,7 @@
           <div class="col-sm-3"></div>
           <label for="inputpaso3" class="col-sm-2 col-form-label">&nbsp;</label>
           <div class="col-sm-4">
-            <select name="nodo" id="nodo"  onkeyup="validar()" multiple="multiple" size="3"
+            <select name="nodo" id="nodo"  required multiple="multiple" size="3"
             class="form-control inputFormu" style="background-color: #fff5eb;">
 
             </select>
@@ -183,7 +183,7 @@
           <div class="col-sm-4">
             <div class="input-group date" id="datetimepicker2" data-target-input="nearest">
               <input type="text" class="form-control datetimepicker-input" data-date-format="YYYY-MM-DD HH:mm:ss"
-                    id="fecha_inicio" name="fecha_inicio" data-target="#datetimepicker2" />
+                    id="fecha_inicio" name="fecha_inicio" onkeyup="validar()" data-target="#datetimepicker2" />
               <div class="input-group-append" data-target="#datetimepicker2" data-toggle="datetimepicker">
                 <div class="input-group-text"><i class="fa fa-calendar"></i></div>
               </div>
@@ -217,7 +217,7 @@
           <div class="col-sm-4">
             <div class="input-group date" id="datetimepicker1" data-target-input="nearest">
               <input type="text" class="form-control datetimepicker-input" data-date-format="YYYY-MM-DD HH:mm:ss"
-                id="fecha_termino" name="fecha_termino" data-target="#datetimepicker1" />
+                id="fecha_termino" name="fecha_termino"  onkeyup="validar()" data-target="#datetimepicker1" />
               <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
                 <div class="input-group-text"><i class="fa fa-calendar"></i></div>
               </div>
@@ -263,7 +263,7 @@
           <div class="col-sm-3"></div>
           <label for="inputpaso3" class="col-sm-2 col-form-label">Motivo</label>
           <div class="col-sm-4">
-            <input type="text" class="form-control inputFormu" onkeyup="validar()"
+            <input type="text" class="form-control inputFormu" autocomplete="off" required onkeyup="validar()"
                     id="motivo" name="motivo" onclick="myFunction()" />
           </div>
         </div>
@@ -297,7 +297,7 @@
           <label for="inputfecha_inicio3" class="col-sm-2 col-form-label">Fecha de Entrega</label>
           <div class="col-sm-4">
             <div class="input-group date" id="datetimepicker4" data-target-input="nearest">
-              <input type='text' class="form-control datetimepicker-input" onkeyup="validar()" name="fecha_entrega"
+              <input type='text' class="form-control datetimepicker-input" autocomplete="off" name="fecha_entrega"
               data-date-format="YYYY-MM-DD " onclick="myFunction()" data-target="#datetimepicker4" />
               <div class="input-group-append" data-target="#datetimepicker4" data-toggle="datetimepicker">
                 <div class="input-group-text"><i class="fa fa-calendar"></i></div>
@@ -325,7 +325,8 @@
           <div class="col-sm-3"></div>
           <label for="inputpaso3" class="col-sm-2 col-form-label">Nombre Proyecto</label>
           <div class="col-sm-4">
-            <input type="text" class="form-control inputFormu" onkeyup="validar()" name="nombre_proyecto" onclick="myFunction()" />
+            <input type="text" class="form-control required inputFormu" onkeyup="validar()" autocomplete="off"
+            name="nombre_proyecto" onclick="myFunction()" />
           </div>
         </div>
 
