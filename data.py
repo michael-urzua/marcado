@@ -14,8 +14,9 @@ class consulta_experiracion:
         try:
 
             cursor = conexion.conect_post()
+            print"id_objetivo",id_objetivo
             cursor.execute("""SELECT
-                                cliente_usuario_id,o.nombre
+                                cliente_usuario_id,concat(o.objetivo_id, ' - ' ,o.nombre)
                                 FROM cliente_usuario cu, cliente_mapa_cliente_objetivo co, objetivo o
                                 WHERE cu.cliente_id = co.cliente_id
                                 AND o.objetivo_id = co.objetivo_id
@@ -257,7 +258,7 @@ class inserta_marcadoDatos:
 
 class inserta_bitacora:
     @staticmethod
-    def insert_bitacora(fecha_entrega,nombre_proyecto):
+    def insert_bitacora(fecha_entrega,nombre_proyecto,observaciones):
         try:
             connection = psycopg2.connect(
                 database="central2010", user="postgres", password="atentusdesa", host="172.16.5.124", port="5432")
@@ -275,9 +276,9 @@ class inserta_bitacora:
 
             cursor.execute("""INSERT into
                                 log.bitacora (bitacora_id,version,fecha_entrega, fecha_instalacion, desarrollador,
-                                            nombre_proyecto,tipo, instalado)
-                                values( %s,%s,%s,now(),%s,%s,'M','t');""",
-                                    (bitacora_id,version,fecha_entrega, desarrollador,nombre_proyecto))
+                                            nombre_proyecto,tipo, instalado,observaciones)
+                                values( %s,%s,%s,now(),%s,%s,'M','t',%s);""",
+                                    (bitacora_id,version,fecha_entrega, desarrollador,nombre_proyecto,observaciones))
             connection.commit()
 
             return cursor

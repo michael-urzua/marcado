@@ -273,6 +273,7 @@ def insertar_marcado():
     motivo = request.form['motivo']
     fecha_entrega = request.form['fecha_entrega']
     nombre_proyecto = request.form['nombre_proyecto']
+    observaciones = request.form['observaciones']
 
     cursor1 = consulta_cliente.select_cliente(objetivo)
     cliente = cursor1.fetchone()
@@ -297,7 +298,7 @@ def insertar_marcado():
         cache = cursor3.fetchall()
         q_cache = len(cache)
 
-        cursor = inserta_bitacora.insert_bitacora(fecha_entrega,nombre_proyecto)
+        cursor = inserta_bitacora.insert_bitacora(fecha_entrega,nombre_proyecto,observaciones)
         if cursor == False:
             flash("ERROR INSERT BITACORA", "danger")
         # BORRAR cache.cache_nivel1
