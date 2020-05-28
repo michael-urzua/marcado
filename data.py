@@ -8,13 +8,14 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
+
 class consulta_experiracion:
     @staticmethod
     def select_experiracion(id_objetivo):
         try:
 
             cursor = conexion.conect_post()
-            print"id_objetivo",id_objetivo
+            print"id_objetivo", id_objetivo
             cursor.execute("""SELECT
                                 cliente_usuario_id,concat(o.objetivo_id, ' - ' ,o.nombre)
                                 FROM cliente_usuario cu, cliente_mapa_cliente_objetivo co, objetivo o
@@ -52,6 +53,7 @@ class consulta_objetivo:
             return cursor
         except:
             return False
+
 
 class consulta_user_compania:
     @staticmethod
@@ -107,12 +109,14 @@ class consulta_user_perfiles:
         except:
             return False
 
+
 class actualiza_perfil:
     @staticmethod
     def update_perfil(nombre_perfil, activo, id_perfil_usuario):
         try:
             connection = psycopg2.connect(
-                database="central2010", user="postgres", password="atentusdesa", host="172.16.5.124", port="5432")
+                # database="central2010", user="postgres", password="atentusdesa", host="172.16.5.124", port="5432")
+                database="central2010", user="reporte_web", password=".112233.", host="10.20.12.100", port="5432")
             cursor = connection.cursor()
             cursor.execute(""" UPDATE marcadodatos.perfil_usuario SET  perfil_id=%s, activo=%s WHERE id_perfil_usuario =%s """,
                            (nombre_perfil, activo, id_perfil_usuario))
@@ -144,7 +148,8 @@ class insertar_registro_perfil:
     def insert_perfil(list, perfil_usr_add, activo_usr_add):
 
         connection = psycopg2.connect(
-            database="central2010", user="postgres", password="atentusdesa", host="172.16.5.124", port="5432")
+            # database="central2010", user="postgres", password="atentusdesa", host="172.16.5.124", port="5432")
+            database="central2010", user="reporte_web", password=".112233.", host="10.20.12.100", port="5432")
         cursor = connection.cursor()
         for data in list:
             cursor.execute(
@@ -160,7 +165,7 @@ class insertar_registro_perfil:
 
 class consulta_cache:
     @staticmethod
-    def select_cache(objetivo,fecha_inicial):
+    def select_cache(objetivo, fecha_inicial):
         try:
             cursor = conexion.conect_post()
             cursor.execute(""" SELECT
@@ -172,7 +177,7 @@ class consulta_cache:
                             		cache.cache_nivel1
                             	WHERE
                             		%s::text = ANY (parametro) AND
-                                    fecha_creacion::date BETWEEN %s and '2050-01-01'""", (objetivo,fecha_inicial,))
+                                    fecha_creacion::date BETWEEN %s and '2050-01-01'""", (objetivo, fecha_inicial,))
             return cursor
         except:
             return False
@@ -180,16 +185,17 @@ class consulta_cache:
 
 class borrar_cache:
     @staticmethod
-    def delete_cache(objetivo,fecha_inicial):
+    def delete_cache(objetivo, fecha_inicial):
         try:
             connection = psycopg2.connect(
-                database="central2010", user="postgres", password="atentusdesa", host="172.16.5.124", port="5432")
+                # database="central2010", user="postgres", password="atentusdesa", host="172.16.5.124", port="5432")
+                database="central2010", user="reporte_web", password=".112233.", host="10.20.12.100", port="5432")
             cursor = connection.cursor()
             cursor.execute(""" DELETE FROM
                                 		cache.cache_nivel1
                                WHERE
                                 %s::text = ANY (parametro) AND
-                                fecha_creacion::date BETWEEN %s and '2050-01-01'""", (objetivo,fecha_inicial,))
+                                fecha_creacion::date BETWEEN %s and '2050-01-01'""", (objetivo, fecha_inicial,))
 
             connection.commit()
         except:
@@ -234,10 +240,11 @@ class consulta_zona:
 
 class inserta_marcadoDatos:
     @staticmethod
-    def insert_marcadoDatos(objetivo,nodos,hlocal_inicio,hlocal_termino,motivo):
+    def insert_marcadoDatos(objetivo, nodos, hlocal_inicio, hlocal_termino, motivo):
         try:
             connection = psycopg2.connect(
-                database="central2010", user="postgres", password="atentusdesa", host="172.16.5.124", port="5432")
+                # database="central2010", user="postgres", password="atentusdesa", host="172.16.5.124", port="5432")
+                database = "central2010", user = "reporte_web", password = ".112233.", host = "10.20.12.100", port = "5432")
             cursor = connection.cursor()
 
             cursor.execute(
@@ -248,7 +255,7 @@ class inserta_marcadoDatos:
             cursor.execute("""INSERT INTO public.periodo_marcado
                                 (periodo_marcado_id,objetivo_id, nodos_id, fecha_inicio, fecha_termino,motivo, autorizacion)
                                     VALUES (%s,%s,%s,%s,%s,%s,%s)""",
-                           (periodo_marcado_id,objetivo,nodos,hlocal_inicio,hlocal_termino,motivo,desarrollador))
+                           (periodo_marcado_id, objetivo, nodos, hlocal_inicio, hlocal_termino, motivo, desarrollador))
             connection.commit()
             # flash("DATOS INGRESADOS CON EXITO", "success")
             return cursor
@@ -258,10 +265,11 @@ class inserta_marcadoDatos:
 
 class inserta_bitacora:
     @staticmethod
-    def insert_bitacora(fecha_entrega,nombre_proyecto,observaciones):
+    def insert_bitacora(fecha_entrega, nombre_proyecto, observaciones):
         try:
             connection = psycopg2.connect(
-                database="central2010", user="postgres", password="atentusdesa", host="172.16.5.124", port="5432")
+                # database="central2010", user="postgres", password="atentusdesa", host="172.16.5.124", port="5432")
+                database = "central2010", user = "reporte_web", password = ".112233.", host = "10.20.12.100", port = "5432")
             cursor = connection.cursor()
 
             desarrollador = session['cliente_usuario'][0][0]
@@ -278,7 +286,7 @@ class inserta_bitacora:
                                 log.bitacora (bitacora_id,version,fecha_entrega, fecha_instalacion, desarrollador,
                                             nombre_proyecto,tipo, instalado,observaciones)
                                 values( %s,%s,%s,now(),%s,%s,'M','t',%s);""",
-                                    (bitacora_id,version,fecha_entrega, desarrollador,nombre_proyecto,observaciones))
+                           (bitacora_id, version, fecha_entrega, desarrollador, nombre_proyecto, observaciones))
             connection.commit()
 
             return cursor
