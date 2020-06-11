@@ -208,14 +208,17 @@ class consulta_cliente:
         try:
             cursor = conexion.conect_post()
             cursor.execute(""" SELECT
-                                cliente_usuario_id
-                                FROM cliente_usuario cu, cliente_mapa_cliente_objetivo co, objetivo o
-                                WHERE cu.cliente_id = co.cliente_id
-                                AND o.objetivo_id = co.objetivo_id
-                                AND co.objetivo_id = %s
-                                AND (o.fecha_expiracion >= NOW() OR o.fecha_expiracion IS NULL)
-                                AND (cu.fecha_expiracion >= NOW() OR cu.fecha_expiracion IS NULL)
-                                LIMIT 1 """, (objetivo,))
+                                    cliente_usuario_id,
+                                    o.nombre,
+                                    o.descripcion
+                                    FROM cliente_usuario cu, cliente_mapa_cliente_objetivo co, objetivo o
+                                    WHERE cu.cliente_id = co.cliente_id
+                                    AND o.objetivo_id = co.objetivo_id
+                                    AND co.objetivo_id = %s
+                                    AND (o.fecha_expiracion >= NOW() OR o.fecha_expiracion IS NULL)
+                                    AND (cu.fecha_expiracion >= NOW() OR cu.fecha_expiracion IS NULL)
+                                    ORDER BY cu.cliente_id DESC
+                                    LIMIT 1; """, (objetivo,))
             return cursor
         except:
             return False
@@ -273,7 +276,6 @@ class inserta_bitacora:
             cursor = connection.cursor()
 
             desarrollador = session['cliente_usuario'][0][0]
-
             cursor.execute(
                 "SELECT MAX( bitacora_id ) + 1 FROM log.bitacora")
             bitacora_id = cursor.fetchone()
