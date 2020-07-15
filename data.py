@@ -246,8 +246,8 @@ class inserta_marcadoDatos:
     def insert_marcadoDatos(objetivo, nodos, hlocal_inicio, hlocal_termino, motivo):
         try:
             connection = psycopg2.connect(
-                # database="central2010", user="postgres", password="atentusdesa", host="172.16.5.124", port="5432")
-                database = "central2010", user = "reporte_web", password = ".112233.", host = "10.20.12.100", port = "5432")
+                database="central2010", user="postgres", password="atentusdesa", host="172.16.5.124", port="5432")
+                # database = "central2010", user = "reporte_web", password = ".112233.", host = "10.20.12.100", port = "5432")
             cursor = connection.cursor()
 
             cursor.execute(
@@ -259,7 +259,8 @@ class inserta_marcadoDatos:
                                 (periodo_marcado_id,objetivo_id, nodos_id, fecha_inicio, fecha_termino,motivo, autorizacion)
                                     VALUES (%s,%s,%s,%s,%s,%s,%s)""",
                            (periodo_marcado_id, objetivo, nodos, hlocal_inicio, hlocal_termino, motivo, desarrollador))
-            connection.commit()
+            print"ciursor",objetivo, nodos, hlocal_inicio, hlocal_termino, motivo
+            # connection.commit()
             # flash("DATOS INGRESADOS CON EXITO", "success")
             return cursor
         except:
