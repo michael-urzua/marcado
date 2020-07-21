@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title>MARCADO DE DATOS</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  {% extends "librerias.html" %}
+</head>
+
+<body>
+
+  {% block content %}
+  <!-- .......-CABECERA-....... -->
+  <ul style="padding: 17px;filter:alpha(opacity=50); opacity:0.9;">
+    <form action="/logout" method="POST">
+      <button style="float:right" type="submit" class="btn btn-danger custom-btn btn-lg">Salir</button>
+    </form>
+    <a style="float:right" class="navbar-brand"></a>
+    <i style="font-size:30px;float:right;padding: 5px;color:#073446"></i>
+    <form action="/inicio" method="POST">
+      <button style="float:right" type="submit" class="btn btn-success custom-grafico btn-lg">
+        <span class="fas fa-home"></span>
+      </button>
+    </form>
+    <a style="float:right" class="navbar-brand">{{usuario}}</a>
+    <i class="far fa-user-circle" style="font-size:30px;float:right;padding: 5px;color:#073446"></i>
+    <a style="float:right" class="navbar-brand">{{compania}}</a>
+    <i class="fas fa-university" style="font-size:30px;float:right;padding: 5px;color:#234854"></i>
+    <br>
+  </ul>
+
+  <!-- .......-CABECERA-....... -->
+
+  <div class="jumbotron jumbotron-fluid" style="padding-top: 0px ;padding-bottom: 5px;filter:alpha(opacity=50); opacity:0.9;">
+    <div class="container">
+      <div id="contenido" class="container tab-pane" style="background-color: #ececec;"><br>
+        <form action="/consultar_grafico" method="POST">
+          <div class="form-row">
+            <div class="form-group col-md-3"></div>
+            <div class="form-group col-md-3">
+              <label for="inputnombre">Seleccione Fecha: </label>
+              <select class="form-control" name="mes_grafico">
+                <option value="0">--Seleccione--</option>
+                <option value="2019-11-01/2019-11-30/NOVIEMBRE 19">NOVIEMBRE 19</option>
+                <option value="2020-01-01/2020-01-31/ENERO">ENERO</option>
+                <option value="2020-02-01/2020-02-29/FEBRERO">FEBRERO</option>
+                <option value="2020-03-01/2020-03-31/MARZO">MARZO</option>
+                <option value="2020-04-01/2020-04-30/ABRIL">ABRIL</option>
+                <option value="2020-05-01/2020-05-31/MAYO">MAYO</option>
+                <option value="2020-06-01/2020-06-30/JUNIO">JUNIO</option>
+                <option value="2020-07-01/2020-07-31/JULIO">JULIO</option>
+              </select>
+            </div>
+            <div class="form-group col-md-1"></div>
+            <div class="form-group col-md-3">
+              <br>
+              <button type="submit" class="btn btn-warning custom-btn2">Consultar</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+  {% for category, message in messages %}
+  <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+    <span>{{ message }}</span>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  {% endfor %}
+  {% endif %}
+  {% endwith %}
+
+  <div class="jumbotron jumbotron-fluid" style="padding-top: 14px ;padding-bottom: 5px;filter:alpha(opacity=50); opacity:0.9;">
+    <div class="container">
+      <div class="form-row">
+        <div class="form-group col-md-7">
+          <embed type="image/svg+xml" src="{{chart_data|safe}}">
+        </div>
+        <div class="form-group col-md-5">
+          <embed type="image/svg+xml" src="{{chart_data_marcado|safe}}">
+        </div>
+        <div class="form-group col-md-8">
+          <embed type="image/svg+xml" src="{{chart_data_motivo|safe}}">
+        </div>
+
+        <div class="form-group col-md-8">
+          <embed type="image/svg+xml" src="{{chart_data_nodos|safe}}">
+        </div>
+        <div class="col-sm-4">
+          <label for="inputpaso3" class="col-sm-2 col-form-label" style="max-width: 34%">Buscar Nodo</label>
+          <select class="selectpicker form-control" data-live-search="true" name="origen" id="origen" style="background-color: #fff5eb;width: 481px;">
+            {% for nodo in nodos %}
+            <option data-tokens="{{nodo.0}}">{{nodo.0}}</option>
+            {%endfor%}
+          </select>
+        </div>
+
+
+
+      </div>
+
+    </div>
+  </div>
+
+  {% endblock %}
+</body>

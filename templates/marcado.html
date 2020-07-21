@@ -16,11 +16,19 @@
   <ul style="padding: 17px;filter:alpha(opacity=50); opacity:0.9;">
     <form action="/logout" method="POST">
       <button style="float:right" type="submit" class="btn btn-danger custom-btn btn-lg">Salir</button>
+    </form>
+    <a style="float:right" class="navbar-brand"></a>
+    <i style="font-size:30px;float:right;padding: 5px;color:#073446"></i>
+    <form action="/inicio_graficos" method="POST">
+      <button style="float:right" type="submit" class="btn btn-success custom-grafico btn-lg">
+        <span class="fas fa-chart-bar"></span>
+      </button>
+    </form>
       <a style="float:right" class="navbar-brand">{{usuario}}</a>
       <i class="far fa-user-circle" style="font-size:30px;float:right;padding: 5px;color:#073446"></i>
       <a style="float:right" class="navbar-brand">{{compania}}</a>
       <i class="fas fa-university" style="font-size:30px;float:right;padding: 5px;color:#234854"></i>
-    </form><br>
+    <br>
   </ul>
   <!-- .......-CABECERA-....... -->
 

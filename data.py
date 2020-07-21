@@ -15,7 +15,6 @@ class consulta_experiracion:
         try:
 
             cursor = conexion.conect_post()
-            print"id_objetivo", id_objetivo
             cursor.execute("""SELECT
                                 cliente_usuario_id,concat(o.objetivo_id, ' - ' ,o.nombre)
                                 FROM cliente_usuario cu, cliente_mapa_cliente_objetivo co, objetivo o
@@ -115,8 +114,8 @@ class actualiza_perfil:
     def update_perfil(nombre_perfil, activo, id_perfil_usuario):
         try:
             connection = psycopg2.connect(
-                # database="central2010", user="postgres", password="atentusdesa", host="172.16.5.124", port="5432")
-                database="central2010", user="reporte_web", password=".112233.", host="10.20.12.100", port="5432")
+                database="central2010", user="postgres", password="atentusdesa", host="172.16.5.124", port="5432")
+                # database="central2010", user="reporte_web", password=".112233.", host="10.20.12.100", port="5432")
             cursor = connection.cursor()
             cursor.execute(""" UPDATE marcadodatos.perfil_usuario SET  perfil_id=%s, activo=%s WHERE id_perfil_usuario =%s """,
                            (nombre_perfil, activo, id_perfil_usuario))
@@ -148,8 +147,8 @@ class insertar_registro_perfil:
     def insert_perfil(list, perfil_usr_add, activo_usr_add):
 
         connection = psycopg2.connect(
-            # database="central2010", user="postgres", password="atentusdesa", host="172.16.5.124", port="5432")
-            database="central2010", user="reporte_web", password=".112233.", host="10.20.12.100", port="5432")
+            database="central2010", user="postgres", password="atentusdesa", host="172.16.5.124", port="5432")
+            # database="central2010", user="reporte_web", password=".112233.", host="10.20.12.100", port="5432")
         cursor = connection.cursor()
         for data in list:
             cursor.execute(
@@ -188,8 +187,8 @@ class borrar_cache:
     def delete_cache(objetivo, fecha_inicial):
         try:
             connection = psycopg2.connect(
-                # database="central2010", user="postgres", password="atentusdesa", host="172.16.5.124", port="5432")
-                database="central2010", user="reporte_web", password=".112233.", host="10.20.12.100", port="5432")
+                database="central2010", user="postgres", password="atentusdesa", host="172.16.5.124", port="5432")
+                # database="central2010", user="reporte_web", password=".112233.", host="10.20.12.100", port="5432")
             cursor = connection.cursor()
             cursor.execute(""" DELETE FROM
                                 		cache.cache_nivel1
@@ -246,8 +245,8 @@ class inserta_marcadoDatos:
     def insert_marcadoDatos(objetivo, nodos, hlocal_inicio, hlocal_termino, motivo):
         try:
             connection = psycopg2.connect(
-                # database="central2010", user="postgres", password="atentusdesa", host="172.16.5.124", port="5432")
-                database = "central2010", user = "reporte_web", password = ".112233.", host = "10.20.12.100", port = "5432")
+                database="central2010", user="postgres", password="atentusdesa", host="172.16.5.124", port="5432")
+                # database = "central2010", user = "reporte_web", password = ".112233.", host = "10.20.12.100", port = "5432")
             cursor = connection.cursor()
 
             cursor.execute(
@@ -271,8 +270,8 @@ class inserta_bitacora:
     def insert_bitacora(fecha_entrega, nombre_proyecto, observaciones):
         try:
             connection = psycopg2.connect(
-                # database="central2010", user="postgres", password="atentusdesa", host="172.16.5.124", port="5432")
-                database = "central2010", user = "reporte_web", password = ".112233.", host = "10.20.12.100", port = "5432")
+                database="central2010", user="postgres", password="atentusdesa", host="172.16.5.124", port="5432")
+                # database = "central2010", user = "reporte_web", password = ".112233.", host = "10.20.12.100", port = "5432")
             cursor = connection.cursor()
 
             desarrollador = session['cliente_usuario'][0][0]
@@ -296,5 +295,138 @@ class inserta_bitacora:
             connection.commit()
 
             return cursor
+        except:
+            return False
+
+
+#
+#
+class consulta_grafico:
+    @staticmethod
+    def select_grafico(fecha_inicial,fecha_final):
+        try:
+            cursor = conexion.conect_post()
+            cursor.execute("""SELECT
+                                	CONCAT (a1.objetivo_id,' - ',a2.nombre),
+                                	COUNT (a1.objetivo_id) AS total
+                                FROM
+                                	PUBLIC .periodo_marcado a1
+                                INNER JOIN PUBLIC .objetivo a2 ON a1.objetivo_id = a2.objetivo_id
+                                WHERE
+                                	a1.fecha_inicio :: date BETWEEN %s and %s
+                                GROUP BY
+                                	a1.objetivo_id,
+                                	a2.nombre
+                                HAVING count(*)>=10
+                                ORDER BY
+                                	total DESC""",(fecha_inicial,fecha_final,))
+            return cursor
+
+        except:
+            return False
+
+class consulta_grafico_motivo:
+    @staticmethod
+    def select_grafico_motivo(fecha_inicial,fecha_final):
+        try:
+            cursor = conexion.conect_post()
+            cursor.execute("""SELECT
+                                	CONCAT (objetivo_id,' - ',' Motivo ( ',motivo,'  ) '),
+                                	COUNT (objetivo_id) AS total
+                                FROM
+                                	PUBLIC .periodo_marcado
+                                WHERE
+                                	fecha_inicio :: date BETWEEN %s and %s
+                                GROUP BY
+                                	objetivo_id,
+                                	motivo
+                                HAVING count(*)>=5
+                                ORDER BY
+                                	total DESC""",(fecha_inicial,fecha_final,))
+            return cursor
+
+        except:
+            return False
+
+
+class consulta_grafico_fechainicial:
+    @staticmethod
+    def select_grafico_fechainicial():
+        try:
+            cursor = conexion.conect_post()
+            cursor.execute(""" SELECT
+                                	concat (date_part('year', now()),'-','0',date_part('month', now()),'-','01')
+                                UNION
+                                	SELECT
+                                		concat (date_part('year', now()),'-','0',date_part('month', now()),'-',
+                                			EXTRACT (DAY
+                                				FROM(
+                                					SELECT
+                                						date_trunc('month', CURRENT_DATE) + '1month' :: INTERVAL - '1sec' :: INTERVAL
+                                					)
+                                			)
+                                		) """)
+            return cursor
+
+        except:
+            return False
+
+class consulta_grafico_nodos:
+    @staticmethod
+    def select_grafico_nodos(fecha_inicial,fecha_final):
+        try:
+            cursor = conexion.conect_post()
+            cursor.execute("""SELECT
+                                	CONCAT (objetivo_id,' - ',nodos_id),
+                                	COUNT (objetivo_id) AS total
+                                FROM
+                                	PUBLIC .periodo_marcado
+                                WHERE
+                                	fecha_inicio :: date BETWEEN %s and %s
+                                GROUP BY
+                                	objetivo_id,
+                                	nodos_id
+                                HAVING
+                                	COUNT (*) >= 10
+                                ORDER BY
+                                	total DESC""",(fecha_inicial,fecha_final,))
+            return cursor
+
+        except:
+            return False
+
+class consulta_nodos():
+    @staticmethod
+    def select_nodos():
+        try:
+            cursor = conexion.conect_post()
+            cursor.execute(""" SELECT
+                                	CONCAT (a1.nodo_id, '-',a1.nombre,'-',a2.nombre)
+                                FROM
+                                	nodo a1
+                                INNER JOIN pais a2 on a1.pais_id =  a2.pais_id
+                                ORDER BY a1.nodo_id ASC""")
+            return cursor
+
+        except:
+            return False
+
+class consulta_grafico_marcado:
+    @staticmethod
+    def select_grafico_marcado(fecha_inicial,fecha_final):
+        try:
+            cursor = conexion.conect_post()
+            cursor.execute("""SELECT
+                                	id_tipo_marcado,
+                                	COUNT (*) AS Marcado
+                                FROM
+                                	PUBLIC .periodo_marcado
+                                WHERE
+                                	id_tipo_marcado IN (7, 9)
+                                AND fecha_inicio :: date BETWEEN %s and %s
+                                GROUP BY
+                                	id_tipo_marcado""",(fecha_inicial,fecha_final,))
+            return cursor
+
         except:
             return False

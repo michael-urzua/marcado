@@ -6,9 +6,13 @@ from datetime import datetime, date, time, timedelta
 from pytz import timezone as pytztimezone
 import pytz
 import requests
+import pygal
+from pygal.style import DefaultStyle
+
 from data import   consulta_user_compania, consulta_user, consulta_user_perfiles, consulta_perfil, insertar_registro_perfil, \
-     actualiza_perfil,consulta_objetivo,consulta_cache,borrar_cache,consulta_experiracion,\
-    consulta_cliente,consulta_zona,inserta_marcadoDatos,inserta_bitacora
+     actualiza_perfil,consulta_objetivo,consulta_cache,borrar_cache,consulta_experiracion,consulta_cliente,consulta_zona,\
+     inserta_marcadoDatos,inserta_bitacora,consulta_grafico,consulta_grafico_motivo,consulta_grafico_fechainicial,consulta_grafico_nodos,\
+     consulta_nodos,consulta_grafico_marcado
 
 from utils.get_token import get
 from utils.globals import url2, url_chek
@@ -82,7 +86,7 @@ def session_token(var_session):
     return validar_session
 
 
-@app.route('/inicio')
+@app.route('/inicio', methods=["GET", "POST"])
 def inicio():
 
     if len(session) == 0:
@@ -315,7 +319,172 @@ def insertar_marcado():
 
     return redirect(url_for('inicio'))
 
+#
+#
+#
+#
 
+@app.route("/inicio_graficos", methods=["GET", "POST"])
+def inicio_graficos():
+
+    if len(session) == 0:
+        return redirect(url_for('index'))
+
+    variable = session_token(session)
+    if variable == 'False':
+        return render_template("login.html")
+
+    cursor = consulta_user_compania.select_user_compania()
+    cliente_usuario = cursor.fetchall()
+    nombre = cliente_usuario[0][0]
+    cliente = cliente_usuario[0][1]
+
+    cursor = consulta_grafico_fechainicial.select_grafico_fechainicial()
+    grafico_fechainicial = cursor.fetchall()
+
+    fecha_inicial = grafico_fechainicial[0]
+    fecha_final = grafico_fechainicial[1]
+    # mes = str(grafico_fechainicial[2])
+
+    cursor1 = consulta_grafico.select_grafico(fecha_inicial,fecha_final)
+    cliente_grafico = cursor1.fetchall()
+
+    chart = pygal.Bar(print_values=True, style=DefaultStyle(
+                  value_font_family='googlefont:Raleway',
+                  value_font_size=25,
+                  value_colors=('white',)))
+
+    chart.title = 'OBJETIVOS CON MAS MARCADOS'
+
+    for value in cliente_grafico:
+        chart.add(value[0],[value[1]])
+
+    chart_data = chart.render_data_uri()
+
+    # --------------------------
+
+    cursor2 = consulta_grafico_motivo.select_grafico_motivo(fecha_inicial,fecha_final)
+    cliente_grafico_motivo = cursor2.fetchall()
+
+    chart = pygal.Bar(print_values=True, print_zeroes=False)
+    chart.title = 'MOTIVOS MAS RECURRENTES POR OBJETIVOS'
+    for value_motivo in cliente_grafico_motivo:
+        chart.add(value_motivo[0],[value_motivo[1]])
+
+    chart_data_motivo = chart.render_data_uri()
+
+    # ------------
+
+    cursor3 = consulta_grafico_nodos.select_grafico_nodos(fecha_inicial,fecha_final)
+    cliente_grafico_nodos = cursor3.fetchall()
+
+    chart = pygal.Bar(print_values=True, print_zeroes=False)
+    chart.title = 'NODOS MAS RECURRENTES POR OBJETIVOS'
+    for value_motivo in cliente_grafico_nodos:
+        chart.add(value_motivo[0],[value_motivo[1]])
+
+    chart_data_nodos = chart.render_data_uri()
+
+    # ------------
+    cursor4 = consulta_nodos.select_nodos()
+    nodos = cursor4.fetchall()
+
+    # ------------
+    cursor5 = consulta_grafico_marcado.select_grafico_marcado(fecha_inicial,fecha_final)
+    marcado = cursor5.fetchall()
+
+    pie_chart = pygal.Pie(inner_radius=.4 )
+    pie_chart.title = 'TIPO DE MARCADOS'
+    for value_marcado in marcado:
+        pie_chart.add(str(value_marcado[0]),value_marcado[1])
+
+    chart_data_marcado = pie_chart.render_data_uri()
+
+    return render_template("graficos.html", usuario=nombre, compania=cliente, chart_data = chart_data,
+                            chart_data_motivo = chart_data_motivo, chart_data_nodos = chart_data_nodos,nodos=nodos,
+                            chart_data_marcado=chart_data_marcado)
+
+
+
+@app.route("/consultar_grafico", methods=["GET", "POST"])
+def consultar_grafico():
+
+    if len(session) == 0:
+        return redirect(url_for('index'))
+
+    variable = session_token(session)
+    if variable == 'False':
+        return render_template("login.html")
+
+    cursor = consulta_user_compania.select_user_compania()
+    cliente_usuario = cursor.fetchall()
+    nombre = cliente_usuario[0][0]
+    cliente = cliente_usuario[0][1]
+
+    mes_grafico = request.form['mes_grafico']
+    if mes_grafico == '0':
+        flash("SELECCIONE UNA FECHA ", "danger")
+        return redirect(url_for('inicio_graficos'))
+
+    fecha_inicial = mes_grafico.split("/")[0]
+    fecha_final = mes_grafico.split("/")[1]
+    mes = mes_grafico.split("/")[2]
+
+    cursor1 = consulta_grafico.select_grafico(fecha_inicial,fecha_final)
+    cliente_grafico = cursor1.fetchall()
+
+    chart = pygal.Bar(print_values=True, style=DefaultStyle(
+                  value_font_family='googlefont:Raleway',
+                  value_font_size=25,
+                  value_colors=('white',)))
+
+    chart.title = 'OBJETIVOS CON MAS MARCADOS EN'+' '+mes
+
+    for value in cliente_grafico:
+        chart.add(value[0],[value[1]])
+
+    chart_data = chart.render_data_uri()
+
+    cursor2 = consulta_grafico_motivo.select_grafico_motivo(fecha_inicial,fecha_final)
+    cliente_grafico_motivo = cursor2.fetchall()
+
+    chart = pygal.Bar(print_values=True, print_zeroes=False)
+    chart.title = 'MOTIVOS MAS RECURRENTES POR OBJETIVOS EN'+' '+mes
+    for value_motivo in cliente_grafico_motivo:
+        chart.add(value_motivo[0],[value_motivo[1]])
+
+    chart_data_motivo = chart.render_data_uri()
+
+    # ------------
+
+    cursor3 = consulta_grafico_nodos.select_grafico_nodos(fecha_inicial,fecha_final)
+    cliente_grafico_nodos = cursor3.fetchall()
+
+    chart = pygal.Bar(print_values=True, print_zeroes=False)
+    chart.title = 'NODOS MAS RECURRENTES POR OBJETIVOS EN'+' '+mes
+    for value_motivo in cliente_grafico_nodos:
+        chart.add(value_motivo[0],[value_motivo[1]])
+
+    chart_data_nodos = chart.render_data_uri()
+
+    # ------------
+    cursor4 = consulta_nodos.select_nodos()
+    nodos = cursor4.fetchall()
+
+    # ------------
+    cursor5 = consulta_grafico_marcado.select_grafico_marcado(fecha_inicial,fecha_final)
+    marcado = cursor5.fetchall()
+
+    pie_chart = pygal.Pie(inner_radius=.4 )
+    pie_chart.title = 'TIPO DE MARCADOS EN'+' '+mes
+    for value_marcado in marcado:
+        pie_chart.add(str(value_marcado[0]),value_marcado[1])
+
+    chart_data_marcado = pie_chart.render_data_uri()
+
+    return render_template("graficos.html", usuario=nombre, compania=cliente, chart_data = chart_data,
+                            chart_data_motivo = chart_data_motivo, chart_data_nodos = chart_data_nodos,nodos=nodos,
+                            chart_data_marcado=chart_data_marcado)
 
 
 if(__name__ == "__main__"):

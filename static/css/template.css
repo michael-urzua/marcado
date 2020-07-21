@@ -27,6 +27,12 @@ html {
   color: white;
 }
 
+.btn-success.custom-grafico {
+  background-color: #678181;
+	border-color: #678181;
+  color: white;
+}
+
 .btn-warning.custom-btnmante {
 	background-color: #013a4d;
 	border-color: #013a4d;
