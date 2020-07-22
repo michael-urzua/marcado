@@ -425,11 +425,13 @@ class consulta_grafico_marcado:
                 totales =str(elem).split("L")[0]
 
             cursor.execute("""SELECT
-                                	CASE
-                                    WHEN id_tipo_marcado = 7 THEN
-                                    	'MARCADO - 7'
-                                    ELSE
-                                    	'MANTENCION - 9' END,
+                                	CONCAT(
+                                        	CASE
+                                        WHEN id_tipo_marcado = 7 THEN
+                                        	'MARCADO (7)'
+                                        ELSE
+                                        	'MANTENCION (9)'
+                                        END,' /','Q(',COUNT (id_tipo_marcado),')'),
                                         round(COUNT (id_tipo_marcado)*100 /%s ::numeric, 2)
                                 FROM
                                 	PUBLIC .periodo_marcado
