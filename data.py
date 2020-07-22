@@ -411,21 +411,33 @@ class consulta_nodos():
         except:
             return False
 
+
 class consulta_grafico_marcado:
     @staticmethod
     def select_grafico_marcado(fecha_inicial,fecha_final):
         try:
             cursor = conexion.conect_post()
+
+            cursor.execute("""SELECT count(id_tipo_marcado) FROM public.periodo_marcado
+                                WHERE fecha_inicio :: date BETWEEN %s and %s""",(fecha_inicial,fecha_final))
+            total = cursor.fetchone()
+            for elem in total:
+                totales =str(elem).split("L")[0]
+
             cursor.execute("""SELECT
-                                	id_tipo_marcado,
-                                	COUNT (*) AS Marcado
+                                	CASE
+                                    WHEN id_tipo_marcado = 7 THEN
+                                    	'MARCADO - 7'
+                                    ELSE
+                                    	'MANTENCION - 9' END,
+                                        round(COUNT (id_tipo_marcado)*100 /%s ::numeric, 2)
                                 FROM
                                 	PUBLIC .periodo_marcado
                                 WHERE
                                 	id_tipo_marcado IN (7, 9)
                                 AND fecha_inicio :: date BETWEEN %s and %s
                                 GROUP BY
-                                	id_tipo_marcado""",(fecha_inicial,fecha_final,))
+                                	id_tipo_marcado""",(totales,fecha_inicial,fecha_final,))
             return cursor
 
         except:

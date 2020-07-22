@@ -394,7 +394,8 @@ def inicio_graficos():
     marcado = cursor5.fetchall()
 
     pie_chart = pygal.Pie(inner_radius=.4 )
-    pie_chart.title = 'TIPO DE MARCADOS'
+    pie_chart.title = 'TIPO DE MARCADO (EN %)'
+
     for value_marcado in marcado:
         pie_chart.add(str(value_marcado[0]),value_marcado[1])
 
@@ -476,7 +477,7 @@ def consultar_grafico():
     marcado = cursor5.fetchall()
 
     pie_chart = pygal.Pie(inner_radius=.4 )
-    pie_chart.title = 'TIPO DE MARCADOS EN'+' '+mes
+    pie_chart.title = 'TIPO DE MARCADOS EN'+' '+mes+ ' (EN %)'
     for value_marcado in marcado:
         pie_chart.add(str(value_marcado[0]),value_marcado[1])
 
